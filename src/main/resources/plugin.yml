@@ -1,0 +1,4 @@
+name: CastleFight
+version: '${project.version}'
+main: ru.rstudios.castlefight.CastleFight
+api-version: '1.20'
