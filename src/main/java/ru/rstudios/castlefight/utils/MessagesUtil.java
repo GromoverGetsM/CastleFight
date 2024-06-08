@@ -6,10 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ru.rstudios.castlefight.CastleFight.fileUtil;
+import static ru.rstudios.castlefight.CastleFight.errorUtil;
 
 public class MessagesUtil {
     public String messageString (String messagePath) {
-        return fileUtil.loadFile("messages.yml").getString(messagePath);
+        String message = fileUtil.loadFile("messages.yml").getString(messagePath);
+        if (message != null) {
+            return ChatColor.translateAlternateColorCodes('&', message);
+        } else {
+            errorUtil.error(null, fileUtil.loadFile("messages.yml").getString("castlefight.errors.message-not-found").replace("%message%", messagePath));
+            return null;
+        }
     }
 
     public List<String> messageList (String messageListPath) {

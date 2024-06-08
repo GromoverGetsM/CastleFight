@@ -2,3 +2,11 @@ name: CastleFight
 version: '0.1.1'
 main: ru.rstudios.castlefight.CastleFight
 api-version: '1.20'
+commands:
+  gamemode:
+    usage: /gamemode <0/1/2/3>
+    description: "Изменение режима игры"
+    permission: castlefight.gamemode
+    aliases:
+      - gm
+      - gmode
