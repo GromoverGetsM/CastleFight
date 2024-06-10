@@ -13,3 +13,12 @@ castlefight:
     gamemode:
       usage: "/gamemode <0/1/2/3>"
       no-permission: "&cНет прав."
+
+  items:
+    main_menu:
+      name: "&d▸ &fМеню &d◂"
+      lore:
+        - "&8"
+        - "&fОсновное меню навигации"
+        - "&fПо серверу"
+        - "&8"

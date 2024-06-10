@@ -4,9 +4,13 @@ main: ru.rstudios.castlefight.CastleFight
 api-version: '1.20'
 commands:
   gamemode:
-    usage: /gamemode <0/1/2/3>
+    usage: /gamemode <0/1/2/3> (player)
     description: "Изменение режима игры"
     permission: castlefight.gamemode
     aliases:
       - gm
       - gmode
+  test:
+    usage: /test
+    description: none
+    permission: castlefight.test

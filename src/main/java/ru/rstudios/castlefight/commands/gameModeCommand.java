@@ -12,37 +12,42 @@ import static ru.rstudios.castlefight.CastleFight.*;
 public class gameModeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        if (args.length == 1) {
-            if (sender instanceof Player) {
-                if (sender.hasPermission("castlefight.gamemode")) {
-                    gameModeUtil.SetMode(args[0], (Player) sender);
-                } else {
-                    errorUtil.error((Player) sender, fileUtil.loadFile("messages.yml").getString("castlefight.commands.gamemode.no-permission"));
-                }
-            } else {
-                errorUtil.warning(null, messagesUtil.messageString("castlefight.errors.only-player"));
-            }
-        } else if (args.length >= 2) {
-            if (sender.hasPermission("castlefight.gamemode.others")) {
-                Player player = Bukkit.getPlayer(args[0]);
-                if (player == null) {
-                    errorUtil.error(null, fileUtil.loadFile("messages.yml").getString("castlefight.errors.player-not-found"));
-                } else {
-                    gameModeUtil.SetMode(args[1], player);
-                }
-            } else {
+        switch (args.length) {
+            case 1:
                 if (sender instanceof Player) {
                     gameModeUtil.SetMode(args[0], (Player) sender);
                 } else {
-                    errorUtil.warning(null, messagesUtil.messageString("castlefight.errors.only-player"));
+                    errorUtil.errorfromconfig(null, "castlefight.commands.gamemode.no-permission");
                 }
-            }
-        } else {
-            if (sender instanceof Player) {
-                errorUtil.error((Player) sender, fileUtil.loadFile("messages.yml").getString("castlefight.errors.invalid-args"));
-            } else {
-                errorUtil.error(null, fileUtil.loadFile("messages.yml").getString("castlefight.errors.invalid-args"));
-            }
+                break;
+
+            case 2:
+                if (sender.hasPermission("castlefight.gamemode.others")) {
+                    Player player = Bukkit.getPlayer(args[1]);
+                    if (player == null) {
+                        if (sender instanceof Player) {
+                            errorUtil.errorfromconfig((Player) sender, "castlefight.errors.player-not-found");
+                        } else {
+                            errorUtil.errorfromconfig(null, "castlefight.errors.player-not-found");
+                        }
+                    } else {
+                        gameModeUtil.SetMode(args[0], player);
+                    }
+                } else {
+                    if (sender instanceof Player) {
+                        gameModeUtil.SetMode(args[0], (Player) sender);
+                    } else {
+                        errorUtil.warningfromconfig(null, "castlefight.errors.only-player");
+                    }
+                }
+                break;
+
+            default:
+                if (sender instanceof Player) {
+                    errorUtil.errorfromconfig((Player) sender, "castlefight.errors.invalid-args");
+                } else {
+                    errorUtil.errorfromconfig(null, "castlefight.errors.invalid-args");
+                }
         }
         return true;
     }
