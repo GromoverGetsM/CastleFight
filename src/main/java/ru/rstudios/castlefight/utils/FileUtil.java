@@ -28,12 +28,10 @@ public class FileUtil {
         }
     }
 
-    public boolean createStarterFolder (String folderName) {
+    public void createStarterFolder (String folderName) {
         File folder = new File(plugin.getDataFolder(), folderName);
         if (!folder.exists()) {
-            return folder.mkdirs();
-        } else {
-            return true;
+            folder.mkdirs();
         }
     }
     public FileConfiguration loadFile (String fileName) {
