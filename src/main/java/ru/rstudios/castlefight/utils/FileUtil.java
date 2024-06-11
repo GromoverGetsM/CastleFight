@@ -40,6 +40,10 @@ public class FileUtil {
         return YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), fileName));
     }
 
+    public FileConfiguration loadPlayerData (String playerName) {
+        return YamlConfiguration.loadConfiguration(new File(new File(plugin.getDataFolder(), "data"), playerName+".yml"));
+    }
+
     public FileConfiguration loadUnusualFolderFile (String fileName, String folder) {
         File uFolder = new File(plugin.getDataFolder(), folder);
         if (uFolder.exists() && !uFolder.isFile()) {

@@ -2,12 +2,9 @@ package ru.rstudios.castlefight;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.rstudios.castlefight.commands.gameModeCommand;
-import ru.rstudios.castlefight.commands.testCommand;
 import ru.rstudios.castlefight.listeners.ServerJoinListener;
 import ru.rstudios.castlefight.utils.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 public final class CastleFight extends JavaPlugin {
@@ -37,7 +34,6 @@ public final class CastleFight extends JavaPlugin {
 
         getLogger().info("CastleFight загружает необходимые команды...");
         Objects.requireNonNull(getCommand("gamemode")).setExecutor(new gameModeCommand());
-        Objects.requireNonNull(getCommand("test")).setExecutor(new testCommand());
         getLogger().info("Команды загружены.");
 
         getLogger().info("CastleFight загружает необходимые слушатели...");
