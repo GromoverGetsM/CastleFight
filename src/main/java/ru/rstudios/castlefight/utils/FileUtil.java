@@ -14,16 +14,14 @@ public class FileUtil {
         File uFile = new File(plugin.getDataFolder(), folder);
         if (!uFile.exists() || uFile.isFile()) {
             if (!uFile.mkdirs()) {
-                errorUtil.criterror(null, "Ошибка создания файла: Папка отсутствует и ее создание невозможно.");
+                errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-folder");
             }
         }
 
         File file = new File(uFile, name);
         if (!file.exists() || !file.isFile()) {
             if (!file.createNewFile()) {
-                errorUtil.criterror(null, "Ошибка создания файла: Файл отсутствует и его создание невозможно.");
-            } else {
-                plugin.getLogger().info("Создан файл " + name);
+                errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-file");
             }
         }
     }
@@ -36,10 +34,6 @@ public class FileUtil {
     }
     public FileConfiguration loadFile (String fileName) {
         return YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), fileName));
-    }
-
-    public FileConfiguration loadPlayerData (String playerName) {
-        return YamlConfiguration.loadConfiguration(new File(new File(plugin.getDataFolder(), "data"), playerName+".yml"));
     }
 
     public FileConfiguration loadUnusualFolderFile (String fileName, String folder) {

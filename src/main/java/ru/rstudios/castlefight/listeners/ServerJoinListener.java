@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.io.File;
 import java.io.IOException;
 
 import static ru.rstudios.castlefight.CastleFight.*;
@@ -16,7 +17,10 @@ public class ServerJoinListener implements Listener {
         Player player = event.getPlayer();
         String playerName = player.getName();
 
-        fileUtil.createNewFile("data", playerName + ".yml");
+        if (!new File(new File(plugin.getDataFolder(), "data"), playerName + ".yml").exists()) {
+            fileUtil.createNewFile("data", playerName + ".yml");
+            dataUtil.savePlayersDataTemplate(playerName, "data");
+        }
         itemUtil.setItem(Material.BOOK, player, "main_menu",1, 4);
     }
 }

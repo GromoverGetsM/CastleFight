@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import static ru.rstudios.castlefight.CastleFight.errorUtil;
-import static ru.rstudios.castlefight.CastleFight.fileUtil;
 
 public class GameModeUtil implements Listener {
 
@@ -26,7 +25,7 @@ public class GameModeUtil implements Listener {
                 mode = GameMode.SPECTATOR;
                 break;
             default:
-                errorUtil.warning(player, fileUtil.loadFile("messages.yml").getString("castlefight.errors.invalid-args"));
+                errorUtil.warningfromconfig(player, "castlefight.errors.invalid-args");
                 break;
         }
         player.setGameMode(mode);

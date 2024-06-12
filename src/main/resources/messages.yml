@@ -1,3 +1,8 @@
+#############################
+# RStudios @ 2024           #
+# Not for public distribute #
+#############################
+
 castlefight:
   errors:
     warning: "&e⚠️ &fВ ходе работы кода произошла непредвиденная ошибка: &e%error%"
@@ -5,6 +10,8 @@ castlefight:
     criterror: "&4⛔ &fВ ходе работы кода произошла непредвиденная ошибка: &4%error%"
     only-player: "&cЭта команда может быть использована только игроком"
     only-console: "&cЭта команда может быть использована только консолью"
+    cannot-create-folder: "Требуемая папка отсутствует и её создание невозможно"
+    cannot-create-file: "Требуемый файл отсутствует и его создание невозможно"
     player-not-found: "&cИгрок не найден"
     message-not-found: "&cСообщение %message% не найдено"
     invalid-args: "&cНедостаточно аргументов или они неверны"
@@ -13,6 +20,12 @@ castlefight:
     gamemode:
       usage: "/gamemode <0/1/2/3>"
       no-permission: "&cНет прав."
+
+    stats:
+      usage: "/stats <money/rating>"
+      no-permission: "&cНет прав."
+      rating: "&dCastleFight &8» &fВаш рейтинг: &d%value%&f."
+      money: "&dCastleFight &8» &fВаш баланс: &d%value%&f."
 
   items:
     main_menu:

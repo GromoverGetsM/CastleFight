@@ -10,7 +10,6 @@ commands:
     aliases:
       - gm
       - gmode
-  test:
-    usage: /test
+  stats:
+    usage: /stats <money/rating>
     description: none
-    permission: castlefight.test
