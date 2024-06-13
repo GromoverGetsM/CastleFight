@@ -10,7 +10,7 @@ import static ru.rstudios.castlefight.CastleFight.*;
 
 public class DataUtil {
 
-    public Object returnData (String playerName, String data) {
+    public String returnData (String playerName, String data) {
         return loadPlayerData(playerName).getString(data, "Не найдено");
     }
 
@@ -40,7 +40,7 @@ public class DataUtil {
                 FileConfiguration data = loadPlayerData(playerName);
                 data.set("money", 0);
                 data.set("rating", 100);
-                data.set("roles", "tech");
+                data.set("roles", "mage");
                 data.set("permission_level", 0);
                 data.save(new File(new File(plugin.getDataFolder(), "data"), playerName+".yml"));
             } else {

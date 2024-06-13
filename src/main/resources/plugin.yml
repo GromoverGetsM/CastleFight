@@ -13,3 +13,8 @@ commands:
   stats:
     usage: /stats <money/rating>
     description: none
+
+  spawn:
+    usage: /spawn <roleName> <towerName> <towerLevel>
+    description: Создаёт сущность заданной башни и заданного уровня
+    permission: castlefight.spawn

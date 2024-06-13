@@ -12,9 +12,11 @@ castlefight:
     only-console: "&cЭта команда может быть использована только консолью"
     cannot-create-folder: "Требуемая папка отсутствует и её создание невозможно"
     cannot-create-file: "Требуемый файл отсутствует и его создание невозможно"
+    cannot-create-role: "Запрашиваемая роль отсутствует в папке и её создание невозможно"
     player-not-found: "&cИгрок не найден"
     message-not-found: "&cСообщение %message% не найдено"
     invalid-args: "&cНедостаточно аргументов или они неверны"
+    role-not-found: "&cРоль не найдена."
 
   commands:
     gamemode:
