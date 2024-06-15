@@ -19,6 +19,7 @@ public final class CastleFight extends JavaPlugin {
 
     public static JavaPlugin plugin;
 
+    public static CountDamageUtil countDamageUtil;
     public static DataUtil dataUtil;
     public static ErrorUtil errorUtil;
     public static FileUtil fileUtil;
@@ -32,6 +33,7 @@ public final class CastleFight extends JavaPlugin {
 
         getLogger().info("CastleFight загружает необходимые утилиты...");
         plugin = this;
+        countDamageUtil = new CountDamageUtil();
         dataUtil = new DataUtil();
         errorUtil = new ErrorUtil();
         fileUtil = new FileUtil();
