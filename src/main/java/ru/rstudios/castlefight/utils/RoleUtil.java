@@ -1,6 +1,7 @@
 package ru.rstudios.castlefight.utils;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -110,7 +111,6 @@ public class RoleUtil {
         spiderslairT1.put("DefenseType", "Лёгкий");
         spiderslairT1.put("Cost", 0);
         spiderslairT1.put("Income", 5);
-        spiderslairT1.put("Tower", 1);
 
         spiderslairT2.put("UnitName", "Тарантул");
         spiderslairT2.put("EntityType", "SPIDER");
@@ -123,7 +123,6 @@ public class RoleUtil {
         spiderslairT2.put("DefenseType", "Лёгкий");
         spiderslairT2.put("Cost", 200);
         spiderslairT2.put("Income", 7);
-        spiderslairT2.put("Tower", 2);
 
         spiderslairT3.put("UnitName", "Древний тарантул");
         spiderslairT3.put("EntityType", "SPIDER");
@@ -136,7 +135,6 @@ public class RoleUtil {
         spiderslairT3.put("DefenseType", "Лёгкий");
         spiderslairT3.put("Cost", 260);
         spiderslairT3.put("Income", 10);
-        spiderslairT3.put("Tower", 3);
 
         spiderslairT4.put("UnitName", "Призрачный тарантул");
         spiderslairT4.put("EntityType", "SPIDER");
@@ -149,7 +147,6 @@ public class RoleUtil {
         spiderslairT4.put("DefenseType", "Лёгкий");
         spiderslairT4.put("Cost", 1000);
         spiderslairT4.put("Income", 15);
-        spiderslairT4.put("Tower", 4);
 
         Map<String, List<Map<String, Object>>> elfsData = Map.of(
                 "spiderslair", List.of(

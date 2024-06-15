@@ -29,6 +29,12 @@ castlefight:
       rating: "&dCastleFight &8» &fВаш рейтинг: &d%value%&f."
       money: "&dCastleFight &8» &fВаш баланс: &d%value%&f."
 
+    structure:
+      usage: "/structure <save|load> <roleName> <towerName> <towerLevel>"
+      no-permission: "&cНет прав."
+      saved: "&dCastleFight &8» &fСтруктура уровня %level% сохранена для башни %tower% у роли %role%"
+      loading: "&dCastleFight &8» &fСтруктура уровня %level% башни %tower% у роли %role% загружается..."
+
   items:
     main_menu:
       name: "&d▸ &fМеню &d◂"

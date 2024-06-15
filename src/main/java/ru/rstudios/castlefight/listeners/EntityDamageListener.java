@@ -26,7 +26,7 @@ public class EntityDamageListener implements Listener {
     @EventHandler
     public void onEntityDamaged (EntityDamageEvent event) {
         Entity entity = event.getEntity();
-        if (event.getCause() == EntityDamageEvent.DamageCause.FALL && entity.getCustomName().startsWith("&:")) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL && entity.getCustomName() != null && entity.getCustomName().startsWith("&a")) {
             event.setCancelled(true);
         }
     }

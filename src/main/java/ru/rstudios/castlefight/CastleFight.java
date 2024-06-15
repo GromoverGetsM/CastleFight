@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ru.rstudios.castlefight.commands.gameModeCommand;
 import ru.rstudios.castlefight.commands.spawnCommand;
 import ru.rstudios.castlefight.commands.statsCommand;
+import ru.rstudios.castlefight.commands.structureCommand;
 import ru.rstudios.castlefight.listeners.EntityDamageListener;
 import ru.rstudios.castlefight.listeners.PlayerJoinedServerListener;
 import ru.rstudios.castlefight.utils.*;
@@ -26,6 +27,7 @@ public final class CastleFight extends JavaPlugin {
     public static ItemUtil itemUtil;
     public static MessagesUtil messagesUtil;
     public static RoleUtil roleUtil;
+    public static TowerUtil towerUtil;
 
     @Override
     public void onEnable() {
@@ -40,6 +42,7 @@ public final class CastleFight extends JavaPlugin {
         itemUtil = new ItemUtil();
         messagesUtil = new MessagesUtil();
         roleUtil = new RoleUtil();
+        towerUtil = new TowerUtil();
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
@@ -52,6 +55,8 @@ public final class CastleFight extends JavaPlugin {
         Objects.requireNonNull(getCommand("gamemode")).setExecutor(new gameModeCommand());
         Objects.requireNonNull(getCommand("stats")).setExecutor(new statsCommand());
         Objects.requireNonNull(getCommand("spawn")).setExecutor(new spawnCommand());
+        Objects.requireNonNull(getCommand("structure")).setExecutor(new structureCommand());
+        Objects.requireNonNull(getCommand("structure")).setTabCompleter(new structureCommand());
         Objects.requireNonNull(getCommand("spawn")).setTabCompleter(new spawnCommand());
         Objects.requireNonNull(getCommand("stats")).setTabCompleter(new statsCommand());
         getLogger().info("Команды загружены.");

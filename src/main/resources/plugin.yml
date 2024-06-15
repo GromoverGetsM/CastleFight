@@ -18,3 +18,8 @@ commands:
     usage: /spawn <roleName> <towerName> <towerLevel>
     description: Создаёт сущность заданной башни и заданного уровня
     permission: castlefight.spawn
+
+  structure:
+    usage: /structure <save|load> <roleName> <towerName> <towerLevel>
+    description: Загружает здание роли если такое имеется
+    permission: castlefight.structure
