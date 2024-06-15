@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static ru.rstudios.castlefight.CastleFight.*;
 
-public class ServerJoinListener implements Listener {
+public class PlayerJoinedServerListener implements Listener {
     @EventHandler
     public void onPlayerJoined(PlayerJoinEvent event) throws IOException {
         Player player = event.getPlayer();

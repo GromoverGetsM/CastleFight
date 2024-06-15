@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.*;
 
 import static ru.rstudios.castlefight.CastleFight.*;
@@ -25,7 +26,7 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (args.length == 4) {
+            if (args.length == 7) {
                 Location spawn = player.getLocation();
 
                 if (roleUtil.getRoleUnitData(args[0], args[1], Integer.parseInt(args[2])) != null) {
@@ -33,9 +34,9 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
 
                     Entity entity = player.getWorld().spawnEntity(spawn, EntityType.valueOf(unitData.get("EntityType").toString()));
                     if (args[3].equals("red")) {
-                        entity.setCustomName(ChatColor.translateAlternateColorCodes('&', "&c&l" + unitData.get("UnitName").toString()));
+                        entity.setCustomName(ChatColor.translateAlternateColorCodes('&', "&a&c&l" + unitData.get("UnitName").toString()));
                     } else {
-                        entity.setCustomName(ChatColor.translateAlternateColorCodes('&', "&9&l" + unitData.get("UnitName").toString()));
+                        entity.setCustomName(ChatColor.translateAlternateColorCodes('&', "&a&9&l" + unitData.get("UnitName").toString()));
                     }
                     entity.setCustomNameVisible(true);
 
@@ -56,6 +57,10 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
                     Damageable damageable = livingEntity;
                     damageable.setMaxHealth(Integer.parseInt(unitData.get("Health").toString()));
                     damageable.setHealth(Integer.parseInt(unitData.get("Health").toString()));
+
+                    ((Mob) entity).setTarget(null);
+
+                    Location enemyBase = new Location(entity.getWorld(), Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));
 
                     final LivingEntity[] currentTarget = {null};
 
@@ -82,6 +87,7 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
                                 ((Mob) entity).setTarget(currentTarget[0]);
                             } else if (currentTarget[0] == null) {
                                 ((Mob) entity).setTarget(null);
+                                ((Mob) entity).getPathfinder().moveTo(enemyBase);
                             }
                         }
                     }.runTaskTimer(plugin, 0, 5);
@@ -96,7 +102,6 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
 
                             if (currentTarget[0] != null && !currentTarget[0].isDead() && currentTarget[0].getLocation().distance(entity.getLocation()) <= 2) {
                                 currentTarget[0].damage(countDamageUtil.getUnitDamage(entity, currentTarget[0], Double.parseDouble(unitData.get("Damage").toString())), entity);
-                                sender.sendMessage("Нанесено урона юнитом " + entity + " по врагу " + currentTarget[0] + ": " + countDamageUtil.getUnitDamage(entity, currentTarget[0], Double.parseDouble(unitData.get("Damage").toString())) + " ед.");
                             }
                         }
                     }.runTaskTimer(plugin, 0, Integer.parseInt(unitData.get("Cooldown").toString()));
@@ -115,20 +120,32 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
         List<String> pArgs = new ArrayList<>();
         switch (args.length) {
             case 1:
-                pArgs.add("elfs");
+                File roles = new File(plugin.getDataFolder(), "roles");
+                for (File file : roles.listFiles()) {
+                    pArgs.add(file.getName());
+                }
                 return pArgs;
             case 2:
-                pArgs.add("spiderslair");
+                File towers = new File(new File(plugin.getDataFolder(), "roles"), args[0]);
+                for (File towerFile : towers.listFiles()) {
+                    pArgs.add(towerFile.getName());
+                }
                 return pArgs;
             case 3:
-                pArgs.add("1");
-                pArgs.add("2");
-                pArgs.add("3");
-                pArgs.add("4");
+                File levels = new File(new File(new File(plugin.getDataFolder(), "roles"), args[0]), args[1]);
+                for (File levelFile : levels.listFiles()) {
+                    if (levelFile.getName().contains(".yml")) {
+                        pArgs.add(levelFile.getName().replace(".yml", ""));
+                    }
+                }
                 return pArgs;
             case 4:
                 pArgs.add("blue");
                 pArgs.add("red");
+                return pArgs;
+            case 5, 6, 7:
+                pArgs.add("0");
+                return pArgs;
             default:
                 return pArgs;
         }
@@ -138,7 +155,7 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
         if (name == null || name.isEmpty()) {
             return "";
         }
-        return name.substring(0, 2);
+        return name.substring(2, 4);
     }
 
     private boolean hasSameColorCode(LivingEntity entity, String colorCode) {

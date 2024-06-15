@@ -1,5 +1,6 @@
 package ru.rstudios.castlefight.utils;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -89,6 +90,81 @@ public class RoleUtil {
         } else {
             errorUtil.errorfromconfig(null, "role-not-found");
             return null;
+        }
+    }
+
+    public void loadElfsRole() {
+        Map<String, Object> spiderslairT1 = new HashMap<>();
+        Map<String, Object> spiderslairT2 = new HashMap<>();
+        Map<String, Object> spiderslairT3 = new HashMap<>();
+        Map<String, Object> spiderslairT4 = new HashMap<>();
+
+        spiderslairT1.put("UnitName", "Лесной тарантул");
+        spiderslairT1.put("EntityType", "CAVE_SPIDER");
+        spiderslairT1.put("Damage", 1);
+        spiderslairT1.put("Health", 6);
+        spiderslairT1.put("Cooldown", 60);
+        spiderslairT1.put("SpawnRate", 500);
+        spiderslairT1.put("Owner", "none");
+        spiderslairT1.put("AttackType", "Колющий");
+        spiderslairT1.put("DefenseType", "Лёгкий");
+        spiderslairT1.put("Cost", 0);
+        spiderslairT1.put("Income", 5);
+        spiderslairT1.put("Tower", 1);
+
+        spiderslairT2.put("UnitName", "Тарантул");
+        spiderslairT2.put("EntityType", "SPIDER");
+        spiderslairT2.put("Damage", 2);
+        spiderslairT2.put("Health", 10);
+        spiderslairT2.put("Cooldown", 45);
+        spiderslairT2.put("SpawnRate", 500);
+        spiderslairT2.put("Owner", "none");
+        spiderslairT2.put("AttackType", "Колющий");
+        spiderslairT2.put("DefenseType", "Лёгкий");
+        spiderslairT2.put("Cost", 200);
+        spiderslairT2.put("Income", 7);
+        spiderslairT2.put("Tower", 2);
+
+        spiderslairT3.put("UnitName", "Древний тарантул");
+        spiderslairT3.put("EntityType", "SPIDER");
+        spiderslairT3.put("Damage", 4);
+        spiderslairT3.put("Health", 26);
+        spiderslairT3.put("Cooldown", 45);
+        spiderslairT3.put("SpawnRate", 400);
+        spiderslairT3.put("Owner", "none");
+        spiderslairT3.put("AttackType", "Колющий");
+        spiderslairT3.put("DefenseType", "Лёгкий");
+        spiderslairT3.put("Cost", 260);
+        spiderslairT3.put("Income", 10);
+        spiderslairT3.put("Tower", 3);
+
+        spiderslairT4.put("UnitName", "Призрачный тарантул");
+        spiderslairT4.put("EntityType", "SPIDER");
+        spiderslairT4.put("Damage", 26);
+        spiderslairT4.put("Health", 40);
+        spiderslairT4.put("Cooldown", 40);
+        spiderslairT4.put("SpawnRate", 1500);
+        spiderslairT4.put("Owner", "none");
+        spiderslairT4.put("AttackType", "Колющий");
+        spiderslairT4.put("DefenseType", "Лёгкий");
+        spiderslairT4.put("Cost", 1000);
+        spiderslairT4.put("Income", 15);
+        spiderslairT4.put("Tower", 4);
+
+        Map<String, List<Map<String, Object>>> elfsData = Map.of(
+                "spiderslair", List.of(
+                    spiderslairT1,
+                    spiderslairT2,
+                    spiderslairT3,
+                    spiderslairT4
+                )
+        );
+
+
+        try {
+            roleUtil.createRole("elfs", elfsData);
+        } catch (IOException e) {
+            errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
         }
     }
 }
