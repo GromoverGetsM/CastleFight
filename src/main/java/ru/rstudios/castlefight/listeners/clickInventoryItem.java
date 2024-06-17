@@ -26,11 +26,11 @@ public class clickInventoryItem implements Listener {
                 Map<String, Object> items = fileUtil.loadFile("messages.yml").getConfigurationSection("castlefight.menus." + key + ".items").getValues(false);
                 if (!items.isEmpty()) {
                     for (String key2 : items.keySet()) {
-                        if (event.getCurrentItem().getItemMeta().getDisplayName().equals(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + "name"))) {
-                            if (messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + "role") != null && messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + "tower") != null && messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + "level") != null) {
-                                String role = messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + "role");
-                                String tower = messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + "tower");
-                                int level = Integer.parseInt(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + "level"));
+                        if (event.getCurrentItem().getItemMeta().getDisplayName().equals(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".name"))) {
+                            if (messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".role") != null && messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".tower") != null && messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".level") != null) {
+                                String role = messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".role");
+                                String tower = messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".tower");
+                                int level = Integer.parseInt(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".level"));
 
                                 Player player = (Player) event.getWhoClicked();
                                 if (player.getTargetBlockExact(5).getType() != Material.AIR) {
@@ -52,9 +52,12 @@ public class clickInventoryItem implements Listener {
                                     }
 
                                     if (!hasObstruction) {
-                                        viewLoc.add(-1, 0, -1);
+                                        event.setCancelled(true);
+                                        viewLoc.add(-1, 1, -1);
+                                        player.closeInventory();
                                         towerUtil.loadStructure(role, tower, level, viewLoc);
                                     } else {
+                                        event.setCancelled(true);
                                         player.closeInventory();
                                         player.sendMessage(messagesUtil.messageString("castlefight.errors.cannot-place-tower"));
                                     }

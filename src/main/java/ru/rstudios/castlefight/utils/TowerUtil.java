@@ -56,26 +56,30 @@ public class TowerUtil {
         List<Map<String, Object>> structureData = (List<Map<String, Object>>) config.getList("StructureConfig");
         World world = start.getWorld();
 
-        new BukkitRunnable() {
-            int index = 0;
+        if (structureData != null && !structureData.isEmpty()) {
+            new BukkitRunnable() {
+                int index = 0;
 
-            @Override
-            public void run() {
-                if (index >= structureData.size()) {
-                    cancel();
-                    return;
+                @Override
+                public void run() {
+                    if (index >= structureData.size()) {
+                        cancel();
+                        return;
+                    }
+
+                    Map<String, Object> blockData = structureData.get(index);
+                    int x = (int) blockData.get("x");
+                    int y = (int) blockData.get("y");
+                    int z = (int) blockData.get("z");
+                    Material material = Material.valueOf((String) blockData.get("type"));
+                    Location blockLocation = start.clone().add(x, y, z);
+                    world.getBlockAt(blockLocation).setType(material);
+
+                    index++;
                 }
-
-                Map<String, Object> blockData = structureData.get(index);
-                int x = (int) blockData.get("x");
-                int y = (int) blockData.get("y");
-                int z = (int) blockData.get("z");
-                Material material = Material.valueOf((String) blockData.get("type"));
-                Location blockLocation = start.clone().add(x, y, z);
-                world.getBlockAt(blockLocation).setType(material);
-
-                index++;
-            }
-        }.runTaskTimer(plugin, 0, 5);
+            }.runTaskTimer(plugin, 0, 5);
+        } else {
+            errorUtil.errorfromconfig(null, "castlefight.errors.role-not-found");
+        }
     }
 }
