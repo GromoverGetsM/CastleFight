@@ -17,7 +17,7 @@ public class PlayerRightClickedListener implements Listener {
         if (event.getAction().isRightClick()) {
             Player player = event.getPlayer();
             if (player.getInventory().getItemInMainHand().getType().getKey() == Material.GOLDEN_AXE.getKey()) {
-                Inventory towerList = Bukkit.createInventory(player, 36, messagesUtil.messageString("castlefight.menus.towers.title"));
+                Inventory towerList = inventoryUtil.inventoryFromConfig("towers_" + dataUtil.returnData(player.getName(), "roles"), player);
                 player.openInventory(towerList);
             }
         }

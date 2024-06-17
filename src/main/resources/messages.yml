@@ -1,7 +1,37 @@
-#############################
-# RStudios @ 2024           #
-# Not for public distribute #
-#############################
+#########################################
+# RStudios @ 2024                       #
+# Not for public distribute             #
+#                                       #
+# Плейсхолдеры:                         #
+#                                       #
+# %error% - произошедшая ошибка         #
+# %message% - сообщение из кфг          #
+# %value% - некоторое значение          #
+# %level% - ур. башни                   #
+# %tower% - название башни              #
+# %role% - название роли                #
+#                                       #
+# Управление предметами в меню:         #
+#                                       #
+# name - название предмета              #
+# amount - количество предмета          #
+# slot - слот в меню (от 0)             #
+# type - тип предмета (материал)        #
+# hideEnchantments - скрыть зачарования #
+# hideAttributes - скрыть атрибуты      #
+# hideItemFlags - скрыть установку на   #
+# блок, эффекты зелий, что может ломать #
+# hideUnbreakable - скрыть нерушимость  #
+# viewPermission - право, с которым     #
+# будет видно предмет                   #
+# lore - описание предмета              #
+#                                       #
+# Управление предметами-башнями ролей   #
+#                                       #
+# role - указатель роли                 #
+# tower - указатель башни               #
+# level - указатель уровня              #
+#########################################
 
 castlefight:
   errors:
@@ -13,6 +43,7 @@ castlefight:
     cannot-create-folder: "Требуемая папка отсутствует и её создание невозможно"
     cannot-create-file: "Требуемый файл отсутствует и его создание невозможно"
     cannot-create-role: "Запрашиваемая роль отсутствует в папке и её создание невозможно"
+    cannot-place-tower: "&dCastleFight &8» &fЗдесь нельзя разместить башню."
     player-not-found: "&cИгрок не найден"
     message-not-found: "&cСообщение '%message%' не найдено"
     invalid-args: "&cНедостаточно аргументов или они неверны"
@@ -46,3 +77,82 @@ castlefight:
 
   income:
     unitkilledenemy: "&8» &fВы получили &e$5 &8«"
+
+  menus:
+    towers_elfs:
+      title: "&8» Покупка башен"
+      size: 36
+      items:
+        item1:
+          name: "&2 Паучье логово"
+          amount: 1
+          slot: 10
+          type: PLAYER_HEAD
+          texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWVkMDk4MmU5YWQ5YjRiNDJmMWNjYzM5NjcxOGU2NzUwMGU3ZmJhNmVlMmFiNzQ3OGI0YzgzODNiOTU4ZDEyOCJ9fX0="
+          role: elfs
+          tower: spiderslair
+          level: 1
+          lore:
+            - "&8 БАШНЯ"
+            - "&r"
+            - "&f Создаёт: &2Лесной тарантул "
+            - "&r"
+            - "&7 Характеристики:"
+            - "&7 Здоровье: &c6 ❤"
+            - "&7 Урон: &c1 ед"
+            - "&7 Скорость атаки: &e0.33 уд/c "
+            - "&7 Тип атаки: &aКолющий"
+            - "&7 Тип защиты: &7Лёгкий"
+            - "&r"
+            - "&7 Скорость создания юнита: &e0.04 ед/с"
+            - "&7 Бонус дохода за установку: &e+5"
+            - "&r"
+
+    test:
+      title: "&8>> &fПример меню"
+      size: 9
+      items:
+        item1:
+          name: "Тестовый предмет"
+          amount: 1
+          slot: 1
+          type: STONE
+          hideEnchantments: false
+          hideAttributes: false
+          hideItemFlags: false
+          hideUnbreakable: false
+          lore:
+            - "&8"
+            - "&8>> &fЭто тестовый предмет"
+            - "&8"
+        item2:
+          name: "Алмазный меч"
+          amount: 1
+          slot: 2
+          type: DIAMOND_SWORD
+          enchantments:
+            sharpness: 5
+          lore:
+            - "&8"
+            - "&8>> &fМощный меч"
+            - "&8"
+        item3:
+          name: "Голова игрока"
+          amount: 1
+          slot: 3
+          type: PLAYER_HEAD
+          texture: ""
+          lore:
+            - "&8"
+            - "&8>> &fГолова игрока"
+            - "&8"
+        item4:
+          name: "Скрытый предмет"
+          amount: 1
+          slot: 4
+          type: DIRT
+          viewPermission: "castlefight.item4"
+          lore:
+            - "&8"
+            - "&8>> &fЭтот предмет видно только с правом &ccastlefight.item4&f!"
+            - "&8"

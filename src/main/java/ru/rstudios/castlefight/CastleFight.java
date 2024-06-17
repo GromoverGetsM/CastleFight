@@ -13,6 +13,7 @@ import ru.rstudios.castlefight.commands.structureCommand;
 import ru.rstudios.castlefight.listeners.EntityDamageListener;
 import ru.rstudios.castlefight.listeners.PlayerJoinedServerListener;
 import ru.rstudios.castlefight.listeners.PlayerRightClickedListener;
+import ru.rstudios.castlefight.listeners.clickInventoryItem;
 import ru.rstudios.castlefight.utils.*;
 
 import java.io.File;
@@ -28,6 +29,7 @@ public final class CastleFight extends JavaPlugin {
     public static ErrorUtil errorUtil;
     public static FileUtil fileUtil;
     public static GameModeUtil gameModeUtil;
+    public static InventoryUtil inventoryUtil;
     public static ItemUtil itemUtil;
     public static MessagesUtil messagesUtil;
     public static ParticleUtil particleUtil;
@@ -44,6 +46,7 @@ public final class CastleFight extends JavaPlugin {
         errorUtil = new ErrorUtil();
         fileUtil = new FileUtil();
         gameModeUtil = new GameModeUtil();
+        inventoryUtil = new InventoryUtil();
         itemUtil = new ItemUtil();
         messagesUtil = new MessagesUtil();
         particleUtil = new ParticleUtil();
@@ -68,7 +71,7 @@ public final class CastleFight extends JavaPlugin {
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
-        fileUtil.saveUnusualConfig("messages.yml", false);
+        fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.0"));
         fileUtil.createStarterFolder("data");
         fileUtil.createStarterFolder("roles");
         getLogger().info("Файлы загружены.");
@@ -87,11 +90,12 @@ public final class CastleFight extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinedServerListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerRightClickedListener(), this);
+        getServer().getPluginManager().registerEvents(new clickInventoryItem(), this);
         getLogger().info("Слушатели загружены.");
 
         getLogger().info("CastleFight загружает стартовую расу...");
         roleUtil.loadElfsRole();
-        getLogger().info("Расы загружены.");
+        getLogger().info("Раса загружена.");
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (!new File(new File(plugin.getDataFolder(), "data"), player.getName() + ".yml").exists()) {
