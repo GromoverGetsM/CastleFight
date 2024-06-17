@@ -15,7 +15,7 @@ public class MessagesUtil {
             return ChatColor.translateAlternateColorCodes('&', message);
         } else {
             errorUtil.error(null, fileUtil.loadFile("messages.yml").getString("castlefight.errors.message-not-found").replace("%message%", messagePath));
-            return null;
+            return ChatColor.translateAlternateColorCodes('&', fileUtil.loadFile("messages.yml").getString("castlefight.errors.message-not-found").replace("%message%", messagePath));
         }
     }
 

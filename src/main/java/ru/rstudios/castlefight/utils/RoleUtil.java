@@ -1,7 +1,5 @@
 package ru.rstudios.castlefight.utils;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -115,37 +113,37 @@ public class RoleUtil {
         spiderslairT2.put("UnitName", "Тарантул");
         spiderslairT2.put("EntityType", "SPIDER");
         spiderslairT2.put("Damage", 2);
-        spiderslairT2.put("Health", 10);
+        spiderslairT2.put("Health", 7);
         spiderslairT2.put("Cooldown", 45);
         spiderslairT2.put("SpawnRate", 500);
         spiderslairT2.put("Owner", "none");
         spiderslairT2.put("AttackType", "Колющий");
         spiderslairT2.put("DefenseType", "Лёгкий");
-        spiderslairT2.put("Cost", 200);
+        spiderslairT2.put("Cost", 270);
         spiderslairT2.put("Income", 7);
 
         spiderslairT3.put("UnitName", "Древний тарантул");
         spiderslairT3.put("EntityType", "SPIDER");
         spiderslairT3.put("Damage", 4);
-        spiderslairT3.put("Health", 26);
+        spiderslairT3.put("Health", 12);
         spiderslairT3.put("Cooldown", 45);
         spiderslairT3.put("SpawnRate", 400);
         spiderslairT3.put("Owner", "none");
         spiderslairT3.put("AttackType", "Колющий");
         spiderslairT3.put("DefenseType", "Лёгкий");
-        spiderslairT3.put("Cost", 260);
+        spiderslairT3.put("Cost", 350);
         spiderslairT3.put("Income", 10);
 
         spiderslairT4.put("UnitName", "Призрачный тарантул");
         spiderslairT4.put("EntityType", "SPIDER");
-        spiderslairT4.put("Damage", 26);
+        spiderslairT4.put("Damage", 10);
         spiderslairT4.put("Health", 40);
         spiderslairT4.put("Cooldown", 40);
         spiderslairT4.put("SpawnRate", 1500);
         spiderslairT4.put("Owner", "none");
         spiderslairT4.put("AttackType", "Колющий");
         spiderslairT4.put("DefenseType", "Лёгкий");
-        spiderslairT4.put("Cost", 1000);
+        spiderslairT4.put("Cost", 1500);
         spiderslairT4.put("Income", 15);
 
         Map<String, List<Map<String, Object>>> elfsData = Map.of(

@@ -18,7 +18,6 @@ import java.util.Map;
 import static ru.rstudios.castlefight.CastleFight.*;
 
 public class TowerUtil {
-
     public void saveStructure(String roleName, String towerName, int level, Location start) throws IOException {
         File mainFolder = new File(plugin.getDataFolder(), "roles");
         File roleFolder = new File(mainFolder, roleName);

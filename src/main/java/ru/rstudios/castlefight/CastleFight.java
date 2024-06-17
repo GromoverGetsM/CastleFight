@@ -1,14 +1,18 @@
 package ru.rstudios.castlefight;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.castlefight.commands.gameModeCommand;
 import ru.rstudios.castlefight.commands.spawnCommand;
 import ru.rstudios.castlefight.commands.statsCommand;
 import ru.rstudios.castlefight.commands.structureCommand;
 import ru.rstudios.castlefight.listeners.EntityDamageListener;
 import ru.rstudios.castlefight.listeners.PlayerJoinedServerListener;
+import ru.rstudios.castlefight.listeners.PlayerRightClickedListener;
 import ru.rstudios.castlefight.utils.*;
 
 import java.io.File;
@@ -26,6 +30,7 @@ public final class CastleFight extends JavaPlugin {
     public static GameModeUtil gameModeUtil;
     public static ItemUtil itemUtil;
     public static MessagesUtil messagesUtil;
+    public static ParticleUtil particleUtil;
     public static RoleUtil roleUtil;
     public static TowerUtil towerUtil;
 
@@ -41,8 +46,25 @@ public final class CastleFight extends JavaPlugin {
         gameModeUtil = new GameModeUtil();
         itemUtil = new ItemUtil();
         messagesUtil = new MessagesUtil();
+        particleUtil = new ParticleUtil();
         roleUtil = new RoleUtil();
         towerUtil = new TowerUtil();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    Block targetBlock = player.getTargetBlockExact(5);
+                    if (targetBlock != null && !targetBlock.getType().isAir()) {
+                        if (player.getInventory().getItemInMainHand().getType().getKey() != Material.GOLDEN_AXE.getKey()) {
+                            particleUtil.createParticleBlock(targetBlock.getLocation());
+                        } else {
+                            particleUtil.createParticleMultiblock3x3(targetBlock.getLocation());
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(this, 0, 5);
+
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
@@ -64,6 +86,7 @@ public final class CastleFight extends JavaPlugin {
         getLogger().info("CastleFight загружает необходимые слушатели...");
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinedServerListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerRightClickedListener(), this);
         getLogger().info("Слушатели загружены.");
 
         getLogger().info("CastleFight загружает стартовую расу...");

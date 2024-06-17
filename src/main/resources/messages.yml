@@ -14,7 +14,7 @@ castlefight:
     cannot-create-file: "Требуемый файл отсутствует и его создание невозможно"
     cannot-create-role: "Запрашиваемая роль отсутствует в папке и её создание невозможно"
     player-not-found: "&cИгрок не найден"
-    message-not-found: "&cСообщение %message% не найдено"
+    message-not-found: "&cСообщение '%message%' не найдено"
     invalid-args: "&cНедостаточно аргументов или они неверны"
     role-not-found: "&cРоль не найдена."
 
