@@ -34,9 +34,9 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
 
                     Entity entity = player.getWorld().spawnEntity(spawn, EntityType.valueOf(unitData.get("EntityType").toString()));
                     if (args[3].equals("red")) {
-                        entity.setCustomName(ChatColor.translateAlternateColorCodes('&', "&a&c&l" + unitData.get("UnitName").toString()));
+                        entity.setCustomName(ChatColor.translateAlternateColorCodes('&', "&c&l" + unitData.get("UnitName").toString()));
                     } else {
-                        entity.setCustomName(ChatColor.translateAlternateColorCodes('&', "&a&9&l" + unitData.get("UnitName").toString()));
+                        entity.setCustomName(ChatColor.translateAlternateColorCodes('&', "&9&l" + unitData.get("UnitName").toString()));
                     }
                     entity.setCustomNameVisible(true);
 
@@ -61,6 +61,7 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
                     ((Mob) entity).setTarget(null);
 
                     Location enemyBase = new Location(entity.getWorld(), Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));
+                    ((Mob) entity).getPathfinder().moveTo(enemyBase);
 
                     final LivingEntity[] currentTarget = {null};
 
@@ -143,8 +144,14 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
                 pArgs.add("blue");
                 pArgs.add("red");
                 return pArgs;
-            case 5, 6, 7:
-                pArgs.add("0");
+            case 5:
+                pArgs.add(String.valueOf(((Player) sender).getLocation().getBlockX()));
+                return pArgs;
+            case 6:
+                pArgs.add(String.valueOf(((Player) sender).getLocation().getBlockY()));
+                return pArgs;
+            case 7:
+                pArgs.add(String.valueOf(((Player) sender).getLocation().getBlockZ()));
                 return pArgs;
             default:
                 return pArgs;
@@ -155,7 +162,7 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
         if (name == null || name.isEmpty()) {
             return "";
         }
-        return name.substring(2, 4);
+        return name.substring(0, 2);
     }
 
     private boolean hasSameColorCode(LivingEntity entity, String colorCode) {

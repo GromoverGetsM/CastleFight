@@ -48,7 +48,7 @@ public class RelativeStructureUtil {
                                                 if (pLocation.getBlock().getType().name().equals(dtype)) {
                                                     Location LBLocation = pLocation;
                                                     if (checkStructure(structureConfig, LBLocation)) {
-                                                        return roleName+"|"+towerName+"|"+Integer.parseInt(levelFile.getName().substring(0, levelFile.getName().indexOf(".")));
+                                                        return roleName+"|"+towerName+"|"+Integer.parseInt(levelFile.getName().substring(0, levelFile.getName().indexOf(".")))+"|"+LBLocation;
                                                     } else {
                                                         break;
                                                     }
@@ -88,63 +88,23 @@ public class RelativeStructureUtil {
         return result;
     }
 
-    public int[] findTowerCoordinates(Location blockLoc, String blockType, String role, String tower, int level) {
+    public int[] findTowerCoordinates(Location blockLoc, String role, String tower, int level) {
         File mainFolder = new File(plugin.getDataFolder(), "roles");
         File roleFolder = new File(mainFolder, role);
         File towerFolder = new File(roleFolder, tower);
         File levelFile = new File(towerFolder, level + ".yml");
 
         if (levelFile.exists() && levelFile.isFile()) {
-            YamlConfiguration blocks = YamlConfiguration.loadConfiguration(levelFile);
-            List<Map<?, ?>> structureConfig = blocks.getMapList("StructureConfig");
+            int minX = blockLoc.getBlockX();
+            int minY = blockLoc.getBlockY();
+            int minZ = blockLoc.getBlockZ();
 
-            for (Map<?, ?> blockData : structureConfig) {
-                String type = (String) blockData.get("type");
-                if (type != null && type.equals(blockType)) {
-                    int relativeX = (Integer) blockData.get("x");
-                    int relativeY = (Integer) blockData.get("y");
-                    int relativeZ = (Integer) blockData.get("z");
+            int maxX = minX + 2;
+            int maxY = minY + 2;
+            int maxZ = minZ + 2;
 
-                    int clickedX = blockLoc.getBlockX();
-                    int clickedY = blockLoc.getBlockY();
-                    int clickedZ = blockLoc.getBlockZ();
-
-                    int baseX = clickedX - relativeX;
-                    int baseY = clickedY - relativeY;
-                    int baseZ = clickedZ - relativeZ;
-
-                    int minX = baseX;
-                    int minY = baseY;
-                    int minZ = baseZ;
-                    int maxX = baseX + 2;
-                    int maxY = baseY + 2;
-                    int maxZ = baseZ + 2;
-
-                    return new int[]{minX, minY, minZ, maxX, maxY, maxZ};
-                }
-            }
+            return new int[]{minX, minY, minZ, maxX, maxY, maxZ};
         }
         return null;
-    }
-
-    private static boolean checkBlockAtRelativeCoordinates(File configFile, int x, int y, int z, String expectedBlockType) {
-        try {
-            YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-            List<Map<?, ?>> structureConfig = config.getMapList("StructureConfig");
-
-            for (Map<?, ?> blockData : structureConfig) {
-                int bx = (Integer) blockData.get("x");
-                int by = (Integer) blockData.get("y");
-                int bz = (Integer) blockData.get("z");
-                String blockType = (String) blockData.get("type");
-
-                if (bx == x && by == y && bz == z && blockType != null && blockType.equalsIgnoreCase(expectedBlockType)) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }
