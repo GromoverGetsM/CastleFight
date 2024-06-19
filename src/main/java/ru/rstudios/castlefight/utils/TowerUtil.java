@@ -10,10 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.rstudios.castlefight.CastleFight.*;
 
@@ -79,7 +76,7 @@ public class TowerUtil {
                 }
             }.runTaskTimer(plugin, 0, 5);
         } else {
-            errorUtil.errorfromconfig(null, "castlefight.errors.role-not-found");
+            errorUtil.errorfromconfig(null, "castlefight.errors.tower-not-found");
         }
     }
 }

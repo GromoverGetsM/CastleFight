@@ -5,6 +5,8 @@ import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -27,21 +29,20 @@ public class InventoryUtil {
     public Inventory inventoryFromConfig(@NotNull String configName, @NotNull Player player) {
         FileConfiguration menuConfig = fileUtil.loadFile("messages.yml");
         Inventory inv = Bukkit.createInventory(player, menuConfig.getInt("castlefight.menus." + configName + ".size"), messagesUtil.messageString("castlefight.menus." + configName + ".title"));
-        Map<String, Object> items = menuConfig.getConfigurationSection("castlefight.menus." + configName + ".items").getValues(false);
+        ConfigurationSection itemsSection = menuConfig.getConfigurationSection("castlefight.menus." + configName + ".items");
 
-        if (!items.isEmpty()) {
-            for (String key : items.keySet()) {
-                String name = ChatColor.translateAlternateColorCodes('&', menuConfig.getString("castlefight.menus." + configName + ".items." + key + ".name")) != null ? ChatColor.translateAlternateColorCodes('&', menuConfig.getString("castlefight.menus." + configName + ".items." + key + ".name", "Безымянный предмет")) : " ";
-                int amount = menuConfig.getInt("castlefight.menus." + configName + ".items." + key + ".amount", 1);
-                int slot = menuConfig.getInt("castlefight.menus." + configName + ".items." + key + ".slot", 1);
-                String typeString = menuConfig.getString("castlefight.menus." + configName + ".items." + key + ".type", "STONE");
-                List<String> lore = menuConfig.getStringList("castlefight.menus." + configName + ".items." + key + ".lore");
+        if (itemsSection != null) {
+            for (String key : itemsSection.getKeys(false)) {
+                String name = ChatColor.translateAlternateColorCodes('&', itemsSection.getString(key + ".name", "Безымянный предмет"));
+                int amount = itemsSection.getInt(key + ".amount", 1);
+                List<String> lore = itemsSection.getStringList(key + ".lore");
+                List<String> enchants = itemsSection.getStringList(key + ".enchantments");
 
                 for (int i = 0; i < lore.size(); i++) {
                     lore.set(i, ChatColor.translateAlternateColorCodes('&', lore.get(i)));
                 }
 
-                Material type = Material.matchMaterial(typeString);
+                Material type = Material.matchMaterial(itemsSection.getString(key + ".type", "STONE"));
                 if (type == null) {
                     type = Material.STONE;
                 }
@@ -54,7 +55,7 @@ public class InventoryUtil {
                     meta.setLore(lore);
 
                     if (type == Material.PLAYER_HEAD) {
-                        String texture = menuConfig.getString("castlefight.menus." + configName + ".items." + key + ".texture");
+                        String texture = itemsSection.getString(key + ".texture");
                         if (texture != null) {
                             SkullMeta skullMeta = (SkullMeta) meta;
 
@@ -78,11 +79,12 @@ public class InventoryUtil {
                         }
                     }
 
-                    if (menuConfig.contains("castlefight.menus." + configName + ".items." + key + ".enchantments")) {
-                        Map<String, Object> enchantments = menuConfig.getConfigurationSection("castlefight.menus." + configName + ".items." + key + ".enchantments").getValues(false);
-                        for (String enchantmentKey : enchantments.keySet()) {
-                            Enchantment enchantment = Enchantment.getByKey(org.bukkit.NamespacedKey.minecraft(enchantmentKey.toLowerCase()));
-                            int level = (int) enchantments.get(enchantmentKey);
+                    for (String enchantmentInfo : enchants) {
+                        String[] enchantData = enchantmentInfo.split(":");
+                        if (enchantData.length == 2) {
+                            String enchantmentName = enchantData[0].trim().toLowerCase();
+                            int level = Integer.parseInt(enchantData[1].trim());
+                            Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentName));
                             if (enchantment != null) {
                                 meta.addEnchant(enchantment, level, true);
                             }
@@ -92,23 +94,28 @@ public class InventoryUtil {
                     item.setItemMeta(meta);
                 }
 
-                String permission = menuConfig.getString("castlefight.menus." + configName + ".items." + key + ".viewPermission");
+                String permission = itemsSection.getString(key + ".viewPermission");
                 if (permission != null && Bukkit.getPluginManager().getPermission(permission) == null) {
                     addPermission(permission);
                 }
 
-                if (permission != null) {
-                    if (player.hasPermission(permission)) {
+                if (permission == null || player.hasPermission(permission)) {
+                    if (itemsSection.isList(key + ".slots")) {
+                        List<Integer> slots = itemsSection.getIntegerList(key + ".slots");
+                        for (int slot : slots) {
+                            inv.setItem(slot, item);
+                        }
+                    } else {
+                        int slot = itemsSection.getInt(key + ".slot", 1);
                         inv.setItem(slot, item);
                     }
-                } else {
-                    inv.setItem(slot, item);
                 }
             }
         }
 
         return inv;
     }
+
 
     private void addPermission (String name) {
         PluginManager pluginManager = Bukkit.getPluginManager();

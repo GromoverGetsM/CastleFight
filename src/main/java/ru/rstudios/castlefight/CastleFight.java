@@ -23,7 +23,6 @@ import java.util.Objects;
 public final class CastleFight extends JavaPlugin {
 
     public static JavaPlugin plugin;
-
     public static CountDamageUtil countDamageUtil;
     public static DataUtil dataUtil;
     public static ErrorUtil errorUtil;
@@ -33,6 +32,7 @@ public final class CastleFight extends JavaPlugin {
     public static ItemUtil itemUtil;
     public static MessagesUtil messagesUtil;
     public static ParticleUtil particleUtil;
+    public static RelativeStructureUtil relativeStructureUtil;
     public static RoleUtil roleUtil;
     public static TowerUtil towerUtil;
 
@@ -50,6 +50,7 @@ public final class CastleFight extends JavaPlugin {
         itemUtil = new ItemUtil();
         messagesUtil = new MessagesUtil();
         particleUtil = new ParticleUtil();
+        relativeStructureUtil = new RelativeStructureUtil();
         roleUtil = new RoleUtil();
         towerUtil = new TowerUtil();
         new BukkitRunnable() {
