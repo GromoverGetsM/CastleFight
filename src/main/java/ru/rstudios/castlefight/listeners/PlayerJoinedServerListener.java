@@ -21,6 +21,8 @@ public class PlayerJoinedServerListener implements Listener {
             fileUtil.createNewFile("data", playerName + ".yml");
             dataUtil.savePlayersDataTemplate(playerName, "data");
         }
-        itemUtil.setItem(Material.BOOK, player, "main_menu",1, 4);
+        if (messagesUtil.messageString("castlefight.items.main_menu.give-on-join").equalsIgnoreCase("true") && fileUtil.loadFile("messages.yml").getString("castlefight.items.main_menu.slot") != null && fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot") >= 0 && fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot") <= 8) {
+            itemUtil.setItem(Material.BOOK, player, "main_menu",1, fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot"));
+        }
     }
 }

@@ -23,6 +23,8 @@ public class statsCommand implements CommandExecutor, TabCompleter {
                     String data = dataUtil.returnData(player.getName(), args[0].toLowerCase()).toString();
                     sender.sendMessage(messagesUtil.messageString("castlefight.commands.stats."+args[0].toLowerCase()).replace("%value%", data));
                 }
+            } else {
+                player.sendMessage(messagesUtil.messageString("castlefight.commands.stats.usage"));
             }
         }
         return true;

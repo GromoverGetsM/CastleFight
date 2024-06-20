@@ -23,3 +23,8 @@ commands:
     usage: /structure <save|load> <roleName> <towerName> <towerLevel>
     description: Загружает здание роли если такое имеется
     permission: castlefight.structure
+
+  openmenu:
+    usage: /openmenu <player> <menuName>
+    description: Открывает указанное меню игроку
+    permission: castlefight.openmenu

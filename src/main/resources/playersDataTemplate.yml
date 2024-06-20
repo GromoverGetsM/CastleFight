@@ -1,0 +1,8 @@
+money: 0
+rating: 100
+roles:
+  - elfs
+towerlimit: 10
+uniquetowerlimit: 10
+defaultincome: 20
+defaultingamemoney: 200

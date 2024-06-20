@@ -108,7 +108,7 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
                     }.runTaskTimer(plugin, 0, Integer.parseInt(unitData.get("Cooldown").toString()));
                 }
             } else {
-                errorUtil.errorfromconfig(player, "castlefight.errors.invalid-args");
+                player.sendMessage(messagesUtil.messageString("castlefight.commands.spawn.usage"));
             }
         } else {
             errorUtil.errorfromconfig(null, "castlefight.errors.only-player");

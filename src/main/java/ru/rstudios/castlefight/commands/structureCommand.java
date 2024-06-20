@@ -60,7 +60,7 @@ public class structureCommand implements CommandExecutor, TabCompleter {
                 }
 
             } else {
-                errorUtil.errorfromconfig(player, "castlefight.errors.invalid-args");
+                player.sendMessage(messagesUtil.messageString("castlefight.commands.structure.usage"));
             }
         } else {
             errorUtil.errorfromconfig(null, "castlefight.errors.only-player");

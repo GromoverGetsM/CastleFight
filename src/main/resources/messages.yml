@@ -35,7 +35,7 @@
 # level - указатель уровня              #
 #########################################
 
-messages-version: 1.0
+messages-version: 1.2
 
 castlefight:
   errors:
@@ -72,8 +72,17 @@ castlefight:
       saved: "&dCastleFight &8» &fСтруктура уровня %level% сохранена для башни %tower% у роли %role%"
       loading: "&dCastleFight &8» &fСтруктура уровня %level% башни %tower% у роли %role% загружается..."
 
+    spawn:
+      usage: "/spawn <roleName> <towerName> <level> <blue|red> <targetX> <targetY> <targetZ>"
+
+    openmenu:
+      usage: "/openmenu <player> <menu>"
+
   items:
     main_menu:
+      give-on-join: true
+      # Слоты от 0 до 8
+      slot: 4
       name: "&d▸ &fМеню &d◂"
       lore:
         - "&8"

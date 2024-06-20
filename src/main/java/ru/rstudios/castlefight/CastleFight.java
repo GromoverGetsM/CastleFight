@@ -6,10 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import ru.rstudios.castlefight.commands.gameModeCommand;
-import ru.rstudios.castlefight.commands.spawnCommand;
-import ru.rstudios.castlefight.commands.statsCommand;
-import ru.rstudios.castlefight.commands.structureCommand;
+import ru.rstudios.castlefight.commands.*;
 import ru.rstudios.castlefight.listeners.EntityDamageListener;
 import ru.rstudios.castlefight.listeners.PlayerJoinedServerListener;
 import ru.rstudios.castlefight.listeners.PlayerRightClickedListener;
@@ -72,7 +69,7 @@ public final class CastleFight extends JavaPlugin {
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
-        fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.0"));
+        fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.2"));
         fileUtil.createStarterFolder("data");
         fileUtil.createStarterFolder("roles");
         getLogger().info("Файлы загружены.");
@@ -82,6 +79,8 @@ public final class CastleFight extends JavaPlugin {
         Objects.requireNonNull(getCommand("stats")).setExecutor(new statsCommand());
         Objects.requireNonNull(getCommand("spawn")).setExecutor(new spawnCommand());
         Objects.requireNonNull(getCommand("structure")).setExecutor(new structureCommand());
+        Objects.requireNonNull(getCommand("openmenu")).setExecutor(new openMenuCommand());
+        Objects.requireNonNull(getCommand("openmenu")).setTabCompleter(new openMenuCommand());
         Objects.requireNonNull(getCommand("structure")).setTabCompleter(new structureCommand());
         Objects.requireNonNull(getCommand("spawn")).setTabCompleter(new spawnCommand());
         Objects.requireNonNull(getCommand("stats")).setTabCompleter(new statsCommand());
