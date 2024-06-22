@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import static ru.rstudios.castlefight.CastleFight.*;
 
@@ -43,7 +44,9 @@ public class TowerUtil {
         config.save(levelFile);
     }
 
-    public void loadStructure(String roleName, String towerName, int level, Location start) {
+    public CompletableFuture<Boolean> loadStructure(String roleName, String towerName, int level, Location start) {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
         File mainFolder = new File(plugin.getDataFolder(), "roles");
         File roleFolder = new File(mainFolder, roleName);
         File towerFolder = new File(roleFolder, towerName);
@@ -60,6 +63,7 @@ public class TowerUtil {
                 @Override
                 public void run() {
                     if (index >= structureData.size()) {
+                        future.complete(true);
                         cancel();
                         return;
                     }
@@ -77,6 +81,9 @@ public class TowerUtil {
             }.runTaskTimer(plugin, 0, 5);
         } else {
             errorUtil.errorfromconfig(null, "castlefight.errors.tower-not-found");
+            future.complete(false);
         }
+
+        return future;
     }
 }

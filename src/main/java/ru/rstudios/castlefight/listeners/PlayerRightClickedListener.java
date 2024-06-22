@@ -11,10 +11,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static ru.rstudios.castlefight.CastleFight.*;
 
@@ -78,7 +81,21 @@ public class PlayerRightClickedListener implements Listener {
                                     }
                                 }
 
-                                towerUtil.loadStructure(role, tower, possibleLevel, leftBottom);
+                                List<MetadataValue> id0 = leftBottom.getBlock().getMetadata("id");
+                                if (!id0.isEmpty()) {
+                                    holoUtil.deleteHolo(player.getWorld(), player.getName()+"_"+tower+"_"+level+"_"+id0.get(0).asInt());
+
+                                    towerUtil.loadStructure(role, tower, possibleLevel, leftBottom).thenAccept(successfulLoad -> {
+                                        if (successfulLoad) {
+                                            Random random = new Random();
+                                            int id = random.nextInt(1, 1000000);
+                                            leftBottom.getBlock().setMetadata("owner", new FixedMetadataValue(plugin, player.getName()));
+                                            leftBottom.getBlock().setMetadata("id", new FixedMetadataValue(plugin, id));
+
+                                            holoUtil.createHologram(leftBottom.add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
+                                        }
+                                    });
+                                }
                             } else {
                                 errorUtil.errorfromconfig(player, "castlefight.errors.tower-not-found");
                             }

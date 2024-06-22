@@ -25,6 +25,7 @@ public final class CastleFight extends JavaPlugin {
     public static ErrorUtil errorUtil;
     public static FileUtil fileUtil;
     public static GameModeUtil gameModeUtil;
+    public static HoloUtil holoUtil;
     public static InventoryUtil inventoryUtil;
     public static ItemUtil itemUtil;
     public static MessagesUtil messagesUtil;
@@ -43,6 +44,7 @@ public final class CastleFight extends JavaPlugin {
         errorUtil = new ErrorUtil();
         fileUtil = new FileUtil();
         gameModeUtil = new GameModeUtil();
+        holoUtil = new HoloUtil();
         inventoryUtil = new InventoryUtil();
         itemUtil = new ItemUtil();
         messagesUtil = new MessagesUtil();

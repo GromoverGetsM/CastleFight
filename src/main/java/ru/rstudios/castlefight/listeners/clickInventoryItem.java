@@ -4,13 +4,19 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static ru.rstudios.castlefight.CastleFight.*;
 
@@ -59,7 +65,21 @@ public class clickInventoryItem implements Listener {
                                         event.setCancelled(true);
                                         viewLoc.add(-1, 1, -1);
                                         player.closeInventory();
-                                        towerUtil.loadStructure(role, tower, level, viewLoc);
+                                        towerUtil.loadStructure(role, tower, level, viewLoc).thenAccept(successfulLoad -> {
+                                            if (successfulLoad) {
+                                                File mainFolder = new File(plugin.getDataFolder(), "roles");
+                                                File roleFolder = new File(mainFolder, role);
+                                                File towerFolder = new File(roleFolder, tower);
+                                                File levelFile = new File(towerFolder, level + ".yml");
+
+                                                Random random = new Random();
+                                                int id = random.nextInt(1, 1000000);
+                                                viewLoc.getBlock().setMetadata("owner", new FixedMetadataValue(plugin, player.getName()));
+                                                viewLoc.getBlock().setMetadata("id", new FixedMetadataValue(plugin, id));
+
+                                                holoUtil.createHologram(viewLoc.add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+level+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
+                                            }
+                                        });
                                     } else {
                                         event.setCancelled(true);
                                         player.closeInventory();
