@@ -36,7 +36,7 @@ public class clickInventoryItem implements Listener {
                 Map<String, Object> items = fileUtil.loadFile("messages.yml").getConfigurationSection("castlefight.menus." + key + ".items").getValues(false);
                 if (!items.isEmpty()) {
                     for (String key2 : items.keySet()) {
-                        if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta().getDisplayName().equals(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".name"))) {
+                        if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null && event.getCurrentItem().getItemMeta().getDisplayName().equals(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".name"))) {
                             if (messages.getString("castlefight.menus." + key + ".items." + key2 + ".role") != null && messages.getString("castlefight.menus." + key + ".items." + key2 + ".tower") != null && messages.getString("castlefight.menus." + key + ".items." + key2 + ".level") != null) {
                                 if (!event.getWhoClicked().getWorld().getName().equals("world")) {
                                     String role = messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".role");
