@@ -47,6 +47,8 @@ public class ParticleUtil {
             if (hasObstruction) break;
         }
 
+        if (location.getWorld().getName().equals("world")) hasObstruction = true;
+
         Particle.DustOptions dustOptions = hasObstruction ? new Particle.DustOptions(Color.RED, 1.0F) : new Particle.DustOptions(Color.GREEN, 1.0F);
         Particle particleType = Particle.REDSTONE;
 

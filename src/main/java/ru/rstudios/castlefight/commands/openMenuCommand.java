@@ -54,9 +54,7 @@ public class openMenuCommand implements CommandExecutor, TabCompleter {
             case 2:
                 Map<String, Object> menus = fileUtil.loadFile("messages.yml").getConfigurationSection("castlefight.menus").getValues(false);
                 if (!menus.isEmpty()) {
-                    for (String name : menus.keySet()) {
-                        pArgs.add(name);
-                    }
+                    pArgs.addAll(menus.keySet());
                 }
                 break;
         }

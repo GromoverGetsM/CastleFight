@@ -28,3 +28,18 @@ commands:
     usage: /openmenu <player> <menuName>
     description: Открывает указанное меню игроку
     permission: castlefight.openmenu
+
+  creategame:
+    usage: /creategame <playersCount>
+    description: Создаёт игровой мир и переносит туда игрока
+    permission: castlefight.creategame
+
+  closegame:
+    usage: /closegame <ID> <playersPlanned>
+    description: Закрывает игру с указанным ID
+    permission: castlefight.closegame
+
+  world:
+    usage: /world <worldName>
+    description: Телепортирует исполнителя в указанный мир
+    permission: castlefight.world

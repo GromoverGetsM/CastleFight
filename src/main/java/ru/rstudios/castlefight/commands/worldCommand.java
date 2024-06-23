@@ -1,5 +1,8 @@
 package ru.rstudios.castlefight.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,20 +14,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.rstudios.castlefight.CastleFight.*;
+public class worldCommand implements CommandExecutor, TabCompleter {
 
-public class statsCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (sender instanceof Player) {
-            Player player = (Player) sender;
             if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("rating") || args[0].equalsIgnoreCase("money")) {
-                    String data = dataUtil.returnData(player.getName(), args[0].toLowerCase());
-                    sender.sendMessage(messagesUtil.messageString("castlefight.commands.stats."+args[0].toLowerCase()).replace("%value%", data));
+                World world = Bukkit.getWorld(args[0]);
+                if (world != null) {
+                    ((Player) sender).teleport(new Location(world, 0, 64, 0));
                 }
-            } else {
-                player.sendMessage(messagesUtil.messageString("castlefight.commands.stats.usage"));
             }
         }
         return true;
@@ -33,13 +32,12 @@ public class statsCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         List<String> pArgs = new ArrayList<>();
-        switch (args.length) {
-            case 1, 2:
-                pArgs.add("Money");
-                pArgs.add("Rating");
-                break;
-            default:
-                break;
+        if (args.length == 1) {
+            for (World world : Bukkit.getWorlds()) {
+                if (world != null) {
+                    pArgs.add(world.getName());
+                }
+            }
         }
         return pArgs;
     }

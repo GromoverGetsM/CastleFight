@@ -33,6 +33,7 @@ public final class CastleFight extends JavaPlugin {
     public static RelativeStructureUtil relativeStructureUtil;
     public static RoleUtil roleUtil;
     public static TowerUtil towerUtil;
+    public static WorldCreator worldCreator;
 
     @Override
     public void onEnable() {
@@ -52,13 +53,14 @@ public final class CastleFight extends JavaPlugin {
         relativeStructureUtil = new RelativeStructureUtil();
         roleUtil = new RoleUtil();
         towerUtil = new TowerUtil();
+        worldCreator = new WorldCreator();
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     Block targetBlock = player.getTargetBlockExact(5);
                     if (targetBlock != null && !targetBlock.getType().isAir()) {
-                        if (player.getInventory().getItemInMainHand().getType().getKey() != Material.GOLDEN_AXE.getKey()) {
+                        if (player.getInventory().getItemInMainHand().getType() != Material.GOLDEN_AXE) {
                             particleUtil.createParticleBlock(targetBlock.getLocation());
                         } else {
                             particleUtil.createParticleMultiblock3x3(targetBlock.getLocation());
@@ -71,9 +73,15 @@ public final class CastleFight extends JavaPlugin {
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
-        fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.2"));
+        fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.3"));
         fileUtil.createStarterFolder("data");
         fileUtil.createStarterFolder("roles");
+        fileUtil.createStarterFolder("maps");
+        try {
+            fileUtil.createNewFile(plugin.getDataFolder(), "activeGames.yml");
+        } catch (IOException e) {
+            errorUtil.criterror(null, e.getLocalizedMessage());
+        }
         getLogger().info("Файлы загружены.");
 
         getLogger().info("CastleFight загружает необходимые команды...");
@@ -82,6 +90,12 @@ public final class CastleFight extends JavaPlugin {
         Objects.requireNonNull(getCommand("spawn")).setExecutor(new spawnCommand());
         Objects.requireNonNull(getCommand("structure")).setExecutor(new structureCommand());
         Objects.requireNonNull(getCommand("openmenu")).setExecutor(new openMenuCommand());
+        Objects.requireNonNull(getCommand("creategame")).setExecutor(new createGameCommand());
+        Objects.requireNonNull(getCommand("closegame")).setExecutor(new closeGameCommand());
+        Objects.requireNonNull(getCommand("world")).setExecutor(new worldCommand());
+        Objects.requireNonNull(getCommand("world")).setTabCompleter(new worldCommand());
+        Objects.requireNonNull(getCommand("closegame")).setTabCompleter(new closeGameCommand());
+        Objects.requireNonNull(getCommand("creategame")).setTabCompleter(new createGameCommand());
         Objects.requireNonNull(getCommand("openmenu")).setTabCompleter(new openMenuCommand());
         Objects.requireNonNull(getCommand("structure")).setTabCompleter(new structureCommand());
         Objects.requireNonNull(getCommand("spawn")).setTabCompleter(new spawnCommand());
