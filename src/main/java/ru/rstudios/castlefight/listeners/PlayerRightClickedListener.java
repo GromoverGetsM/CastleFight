@@ -3,8 +3,8 @@ package ru.rstudios.castlefight.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,8 +13,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import ru.rstudios.castlefight.modules.GameInfo;
+import ru.rstudios.castlefight.tasks.UnitSpawner;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,8 +31,14 @@ public class PlayerRightClickedListener implements Listener {
         if (event.getAction().isRightClick()) {
             Player player = event.getPlayer();
             if (player.getInventory().getItemInMainHand().getType().getKey() == Material.GOLDEN_AXE.getKey()) {
-                Inventory towerList = inventoryUtil.inventoryFromConfig("towers_" + dataUtil.returnData(player.getName(), "roles"), player);
-                player.openInventory(towerList);
+                FileConfiguration data = dataUtil.loadPlayerData(player.getName());
+                int gameID = data.getInt("gameID");
+                if (gameID != -1) {
+                    GameInfo gameInfo = new GameInfo(gameID);
+
+                    Inventory towerList = inventoryUtil.inventoryFromConfig("towers_" + gameInfo.getPlayerActiveRole(player.getName()), player);
+                    player.openInventory(towerList);
+                }
             }
 
             if (event.getClickedBlock() == null) {
@@ -82,8 +91,9 @@ public class PlayerRightClickedListener implements Listener {
                                 }
 
                                 List<MetadataValue> id0 = leftBottom.getBlock().getMetadata("id");
-                                if (!id0.isEmpty()) {
-                                    holoUtil.deleteHolo(player.getWorld(), player.getName()+"_"+tower+"_"+level+"_"+id0.get(0).asInt());
+                                List<MetadataValue> holoName = leftBottom.getBlock().getMetadata("holoName");
+                                if (!id0.isEmpty() && !holoName.isEmpty()) {
+                                    holoUtil.deleteHolo(player.getWorld(), holoName.get(0).asString());
 
                                     towerUtil.loadStructure(role, tower, possibleLevel, leftBottom).thenAccept(successfulLoad -> {
                                         if (successfulLoad) {
@@ -91,8 +101,13 @@ public class PlayerRightClickedListener implements Listener {
                                             int id = random.nextInt(1, 1000000);
                                             leftBottom.getBlock().setMetadata("owner", new FixedMetadataValue(plugin, player.getName()));
                                             leftBottom.getBlock().setMetadata("id", new FixedMetadataValue(plugin, id));
+                                            leftBottom.getBlock().setMetadata("holoName", new FixedMetadataValue(plugin, player.getName()+"_"+tower+"_"+possibleLevel+"_"+id));
 
-                                            holoUtil.createHologram(leftBottom.add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
+                                            holoUtil.createHologram(leftBottom.clone().add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
+                                            holoUtil.addHoloLine(leftBottom.getWorld(), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, "§b██████████", 2);
+
+                                            HashMap<String, Object> unitData = roleUtil.getRoleUnitData(role, tower, level);
+                                            Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(leftBottom.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), leftBottom), 0, 1);
                                         }
                                     });
                                 }

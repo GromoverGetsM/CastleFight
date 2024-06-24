@@ -2,6 +2,7 @@ package ru.rstudios.castlefight.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,21 +35,15 @@ public class DataUtil {
 
     public void savePlayersDataTemplate (String playerName, String folder) throws IOException {
         File uFile = new File(plugin.getDataFolder(), folder);
-        if (uFile.exists() && !uFile.isFile()) {
-            File dFile = new File(uFile, playerName + ".yml");
-            if (dFile.exists() && dFile.isFile()) {
-                FileConfiguration data = loadPlayerData(playerName);
-                data.set("money", 0);
-                data.set("rating", 100);
-                data.set("roles", "elfs");
-                data.set("permission_level", 0);
-                data.save(new File(new File(plugin.getDataFolder(), "data"), playerName+".yml"));
-            } else {
-                fileUtil.createNewFile(folder, playerName + ".yml");
+        if (uFile.exists() && uFile.isDirectory()) {
+            FileConfiguration sourceData = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "playersDataTemplate.yml"));
+            FileConfiguration destination = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), playerName + ".yml"));
+
+            for (String key : sourceData.getKeys(true)) {
+                destination.set(key, sourceData.get(key));
             }
-        } else {
-            fileUtil.createStarterFolder(folder);
+
+            destination.save(new File(uFile, playerName + ".yml"));
         }
     }
-
 }

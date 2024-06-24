@@ -1,6 +1,7 @@
 package ru.rstudios.castlefight.listeners;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,5 +25,8 @@ public class PlayerJoinedServerListener implements Listener {
         if (messagesUtil.messageString("castlefight.items.main_menu.give-on-join").equalsIgnoreCase("true") && fileUtil.loadFile("messages.yml").getString("castlefight.items.main_menu.slot") != null && fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot") >= 0 && fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot") <= 8) {
             itemUtil.setItem(Material.BOOK, player, "main_menu",1, fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot"));
         }
+
+        YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml")).set("lastJoinTime", System.currentTimeMillis());
+        YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml")).save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
     }
 }

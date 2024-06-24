@@ -57,6 +57,7 @@ castlefight:
     role-not-found: "&cРоль не найдена."
     tower-not-found: "&cСтруктура башни не найдена."
     tower-not-defined: "&cБашня не определена."
+    unknown-unit-data: "&cВведённые данные не совпадают ни с одним из возможных вариантов. Создание юнита отменено."
 
   commands:
     gamemode:

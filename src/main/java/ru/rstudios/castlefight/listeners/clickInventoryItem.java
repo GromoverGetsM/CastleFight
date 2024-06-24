@@ -1,5 +1,6 @@
 package ru.rstudios.castlefight.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -12,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import ru.rstudios.castlefight.tasks.UnitSpawner;
 
 import java.io.File;
 import java.util.HashMap;
@@ -77,8 +79,13 @@ public class clickInventoryItem implements Listener {
                                                     int id = random.nextInt(1, 1000000);
                                                     viewLoc.getBlock().setMetadata("owner", new FixedMetadataValue(plugin, player.getName()));
                                                     viewLoc.getBlock().setMetadata("id", new FixedMetadataValue(plugin, id));
+                                                    viewLoc.getBlock().setMetadata("holoName", new FixedMetadataValue(plugin, player.getName()+"_"+tower+"_"+level+"_"+id));
 
-                                                    holoUtil.createHologram(viewLoc.add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+level+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
+                                                    holoUtil.createHologram(viewLoc.clone().add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+level+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
+                                                    holoUtil.addHoloLine(viewLoc.getWorld(), player.getName()+"_"+tower+"_"+level+"_"+id, "§b██████████", 2);
+
+                                                    HashMap<String, Object> unitData = roleUtil.getRoleUnitData(role, tower, level);
+                                                    Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(viewLoc.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), viewLoc), 0, 1);
                                                 }
                                             });
                                         } else {

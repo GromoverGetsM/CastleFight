@@ -6,16 +6,18 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.rstudios.castlefight.modules.GameInfo;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.rstudios.castlefight.CastleFight.errorUtil;
-import static ru.rstudios.castlefight.CastleFight.worldCreator;
+import static ru.rstudios.castlefight.CastleFight.*;
 
 public class createGameCommand implements CommandExecutor, TabCompleter {
 
@@ -31,7 +33,19 @@ public class createGameCommand implements CommandExecutor, TabCompleter {
             }
 
             if (sender instanceof Player && ID != -1) {
-                ((Player) sender).teleport(new Location(Bukkit.getWorld(ID + "_" + players), 0, 64, 0));
+                FileConfiguration data = dataUtil.loadPlayerData(sender.getName());
+                data.set("gameID", ID);
+                data.set("lastGameTime", System.currentTimeMillis());
+
+                GameInfo gameInfo = new GameInfo(ID);
+                try {
+                    gameInfo.setPlayerTeam(sender.getName(), "blue");
+                    gameInfo.setPlayerActiveRole(sender.getName(), "elfs");
+                    data.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + sender.getName() + ".yml"));
+                } catch (IOException e) {
+                    errorUtil.error(null, e.getLocalizedMessage());
+                }
+                ((Player) sender).teleport(new Location(Bukkit.getWorld(String.valueOf(ID)), 0, 64, 0));
             }
         }
         return true;

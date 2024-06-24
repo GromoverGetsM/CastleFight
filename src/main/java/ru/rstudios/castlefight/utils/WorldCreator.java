@@ -28,8 +28,8 @@ public class WorldCreator {
             ID = random.nextInt(1, 1000000);
         } while (games.getString(ID + "_" + players) != null);
 
-        Bukkit.createWorld(new org.bukkit.WorldCreator(ID + "_" + players));
-        Bukkit.unloadWorld(ID + "_" + players, true);
+        Bukkit.createWorld(new org.bukkit.WorldCreator(String.valueOf(ID)));
+        Bukkit.unloadWorld(String.valueOf(ID), true);
 
         File maps = new File(plugin.getDataFolder(), "maps");
         if (maps.exists() && maps.isDirectory()) {
@@ -44,12 +44,11 @@ public class WorldCreator {
                 }
 
                 File world = matchingFolders.get(random.nextInt(matchingFolders.size()));
-                String worldName = ID + "_" + players;
-                File mainWorldFile = new File(Bukkit.getServer().getWorldContainer() + File.separator + worldName + File.separator);
+                File mainWorldFile = new File(Bukkit.getServer().getWorldContainer() + File.separator + ID + File.separator);
                 fileUtil.copyFilesTo(world, mainWorldFile);
                 games.set(String.valueOf(ID), "active");
                 games.save(new File(plugin.getDataFolder(), "activeGames.yml"));
-                Bukkit.createWorld(new org.bukkit.WorldCreator(ID + "_" + players));
+                Bukkit.createWorld(new org.bukkit.WorldCreator(String.valueOf(ID)));
             } else {
                 return -1;
             }
@@ -61,10 +60,10 @@ public class WorldCreator {
         return ID;
     }
 
-    public boolean deleteGameWorld (int ID, int players) throws IOException {
-        World world = Bukkit.getWorld(ID + "_" + players);
+    public boolean deleteGameWorld (int ID) throws IOException {
+        World world = Bukkit.getWorld(String.valueOf(ID));
         if (world != null) {
-            File worldFile = new File(plugin.getDataFolder(), ID + "_" + players);
+            File worldFile = new File(Bukkit.getServer().getWorldContainer() + File.separator + ID + File.separator);
 
             for (Player player : world.getPlayers()) {
                 player.sendMessage(messagesUtil.messageString("castlefight.main.game-ended"));

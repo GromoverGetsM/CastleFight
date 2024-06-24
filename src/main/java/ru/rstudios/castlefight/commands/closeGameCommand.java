@@ -19,9 +19,9 @@ public class closeGameCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        if (args.length == 2) {
+        if (args.length == 1) {
             try {
-                worldCreator.deleteGameWorld(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+                worldCreator.deleteGameWorld(Integer.parseInt(args[0]));
             } catch (IOException e) {
                 errorUtil.criterror(null, e.getLocalizedMessage());
             }

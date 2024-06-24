@@ -11,6 +11,8 @@ import ru.rstudios.castlefight.listeners.EntityDamageListener;
 import ru.rstudios.castlefight.listeners.PlayerJoinedServerListener;
 import ru.rstudios.castlefight.listeners.PlayerRightClickedListener;
 import ru.rstudios.castlefight.listeners.clickInventoryItem;
+import ru.rstudios.castlefight.tasks.ParticleTask;
+import ru.rstudios.castlefight.tasks.TabPlayersShowTask;
 import ru.rstudios.castlefight.utils.*;
 
 import java.io.File;
@@ -33,7 +35,11 @@ public final class CastleFight extends JavaPlugin {
     public static RelativeStructureUtil relativeStructureUtil;
     public static RoleUtil roleUtil;
     public static TowerUtil towerUtil;
+    public static UnitCreator unitCreator;
     public static WorldCreator worldCreator;
+
+    public static ParticleTask particleTask;
+    public static TabPlayersShowTask tabPlayersShowTask;
 
     @Override
     public void onEnable() {
@@ -53,27 +59,19 @@ public final class CastleFight extends JavaPlugin {
         relativeStructureUtil = new RelativeStructureUtil();
         roleUtil = new RoleUtil();
         towerUtil = new TowerUtil();
+        unitCreator = new UnitCreator();
         worldCreator = new WorldCreator();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    Block targetBlock = player.getTargetBlockExact(5);
-                    if (targetBlock != null && !targetBlock.getType().isAir()) {
-                        if (player.getInventory().getItemInMainHand().getType() != Material.GOLDEN_AXE) {
-                            particleUtil.createParticleBlock(targetBlock.getLocation());
-                        } else {
-                            particleUtil.createParticleMultiblock3x3(targetBlock.getLocation());
-                        }
-                    }
-                }
-            }
-        }.runTaskTimer(this, 0, 5);
 
+        particleTask = new ParticleTask();
+        tabPlayersShowTask = new TabPlayersShowTask();
+
+        Bukkit.getScheduler().runTaskTimer(this, particleTask, 0L, 5L);
+        Bukkit.getScheduler().runTaskTimer(this, tabPlayersShowTask, 0L, 20L);
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
         fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.3"));
+        fileUtil.saveUnusualConfig("playersDataTemplate.yml", !new File(plugin.getDataFolder(), "playersDataTemplate.yml").exists());
         fileUtil.createStarterFolder("data");
         fileUtil.createStarterFolder("roles");
         fileUtil.createStarterFolder("maps");

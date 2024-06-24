@@ -35,8 +35,6 @@ public class HoloUtil {
                 PersistentDataContainer pdc = entity.getPersistentDataContainer();
                 if (!pdc.isEmpty()) {
                     NamespacedKey holoName = new NamespacedKey(plugin, "name");
-                    System.out.println("Найдено: " + pdc.get(holoName, PersistentDataType.STRING));
-                    System.out.println("Получено: " + name);
                     if (pdc.get(holoName, PersistentDataType.STRING) != null && pdc.get(holoName, PersistentDataType.STRING).equals(name)) {
                         entity.remove();
                     }
@@ -81,7 +79,7 @@ public class HoloUtil {
         }
 
         if (lastArmorStandLocation != null) {
-            createHoloLine(lastArmorStandLocation.add(0.0, -1.0, 0.0), name, text, line);
+            createHoloLine(lastArmorStandLocation.add(0.0, -0.25, 0.0), name, text, line);
         }
     }
 
@@ -128,7 +126,7 @@ public class HoloUtil {
 
         if (hasMoreLines && !moreLines.isEmpty()) {
             for (Entity key : moreLines.keySet()) {
-                key.teleport(moreLines.get(key).add(0, 1, 0));
+                key.teleport(moreLines.get(key).add(0, 0.25, 0));
             }
         }
     }
