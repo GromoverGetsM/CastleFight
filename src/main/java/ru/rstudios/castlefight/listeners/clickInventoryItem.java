@@ -6,17 +6,18 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import ru.rstudios.castlefight.modules.ClickActions;
+import ru.rstudios.castlefight.tasks.ClickActionsHandlerTask;
 import ru.rstudios.castlefight.tasks.UnitSpawner;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -39,6 +40,16 @@ public class clickInventoryItem implements Listener {
                 if (!items.isEmpty()) {
                     for (String key2 : items.keySet()) {
                         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null && event.getCurrentItem().getItemMeta().getDisplayName().equals(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".name"))) {
+                            List<String> clickActions = messages.getStringList("castlefight.menus." + key + ".items." + ".onClick");
+                            if (!clickActions.isEmpty()) {
+                                for (String actions : clickActions) {
+                                    String[] parts = actions.split(" ");
+                                    ClickActions clickActions1 = ClickActions.getById(parts[0]);
+                                    String executablePart = clickActions1.getExecutableParts(actions.substring(parts[0].length()).trim());
+                                    Bukkit.getScheduler().runTask(plugin, new ClickActionsHandlerTask(event.getWhoClicked().getName(), clickActions1, executablePart));
+                                }
+                            }
+
                             if (messages.getString("castlefight.menus." + key + ".items." + key2 + ".role") != null && messages.getString("castlefight.menus." + key + ".items." + key2 + ".tower") != null && messages.getString("castlefight.menus." + key + ".items." + key2 + ".level") != null) {
                                 if (!event.getWhoClicked().getWorld().getName().equals("world")) {
                                     String role = messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".role");
@@ -64,8 +75,8 @@ public class clickInventoryItem implements Listener {
                                             if (hasObstruction) break;
                                         }
 
+                                        event.setCancelled(true);
                                         if (!hasObstruction) {
-                                            event.setCancelled(true);
                                             viewLoc.add(-1, 1, -1);
                                             player.closeInventory();
                                             towerUtil.loadStructure(role, tower, level, viewLoc).thenAccept(successfulLoad -> {
@@ -89,7 +100,6 @@ public class clickInventoryItem implements Listener {
                                                 }
                                             });
                                         } else {
-                                            event.setCancelled(true);
                                             player.closeInventory();
                                             player.sendMessage(messagesUtil.messageString("castlefight.errors.cannot-place-tower"));
                                         }

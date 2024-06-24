@@ -5,6 +5,7 @@ import org.bukkit.metadata.MetadataValue;
 import ru.rstudios.castlefight.modules.GameInfo;
 
 import java.util.List;
+import java.util.Locale;
 
 import static ru.rstudios.castlefight.CastleFight.holoUtil;
 import static ru.rstudios.castlefight.CastleFight.unitCreator;
@@ -48,10 +49,13 @@ public class UnitSpawner implements Runnable {
     private void updateProgressBar(double progress) {
         int greenBars = (int) (progress * 10);
         int redBars = 10 - greenBars;
+        int ticksRemaining = spawnRate - ticksElapsed;
+        double secondsRemaining = ticksRemaining / 20.0;
 
         StringBuilder progressBar = new StringBuilder();
-        progressBar.append("§a█".repeat(Math.max(0, greenBars)));
-        progressBar.append("§c█".repeat(Math.max(0, redBars)));
+        progressBar.append("§a").append("█".repeat(Math.max(0, greenBars)));
+        progressBar.append("§c").append("█".repeat(Math.max(0, redBars)));
+        progressBar.append(" §e").append(String.format(Locale.US, "%.1f", secondsRemaining)).append("s");
 
         List<MetadataValue> holoName = structureLeftBottom.getBlock().getMetadata("holoName");
         if (!holoName.isEmpty()) {

@@ -65,10 +65,8 @@ public class FileUtil {
             }
 
             if (toCopy != null) {
-                int length = toCopy.length;
 
-                for (int i = 0; i < length; ++i) {
-                    File copyFile = toCopy[i];
+                for (File copyFile : toCopy) {
                     if (copyFile.isFile()) {
                         org.apache.commons.io.FileUtils.copyFileToDirectory(copyFile, to);
                     } else {
@@ -103,5 +101,20 @@ public class FileUtil {
 
     public void saveUnusualConfig (String fileName, boolean needsToReplace) {
         plugin.saveResource(fileName, needsToReplace);
+    }
+
+    public boolean deleteWorld(File path) {
+        if (path.exists()) {
+            File files[] = path.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteWorld(file);
+                } else {
+                    file.delete();
+                }
+            }
+        }
+
+        return(path.delete());
     }
 }

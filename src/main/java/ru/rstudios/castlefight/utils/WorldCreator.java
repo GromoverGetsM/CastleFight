@@ -76,7 +76,8 @@ public class WorldCreator {
                 games.set(String.valueOf(ID), null);
                 games.save(new File(plugin.getDataFolder(), "activeGames.yml"));
             }
-            return worldFile.delete();
+
+            return fileUtil.deleteWorld(worldFile);
         }
 
         return false;

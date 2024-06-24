@@ -1,11 +1,8 @@
 package ru.rstudios.castlefight;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.castlefight.commands.*;
 import ru.rstudios.castlefight.listeners.EntityDamageListener;
 import ru.rstudios.castlefight.listeners.PlayerJoinedServerListener;
@@ -70,7 +67,7 @@ public final class CastleFight extends JavaPlugin {
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
-        fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.3"));
+        fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.4"));
         fileUtil.saveUnusualConfig("playersDataTemplate.yml", !new File(plugin.getDataFolder(), "playersDataTemplate.yml").exists());
         fileUtil.createStarterFolder("data");
         fileUtil.createStarterFolder("roles");

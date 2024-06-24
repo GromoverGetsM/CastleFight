@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static ru.rstudios.castlefight.CastleFight.plugin;
@@ -62,20 +63,60 @@ public class PlayerInfo {
         return money;
     }
 
+    public void setMoney (String playerName, int money) throws IOException {
+        FileConfiguration playerInfo = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+        playerInfo.set("money." + playerName, money);
+        playerInfo.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+    }
+
     public int getRating() {
         return rating;
+    }
+
+    public void setRating (String playerName, int rating) throws IOException {
+        FileConfiguration playerInfo = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+        playerInfo.set("rating." + playerName, rating);
+        playerInfo.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
     }
 
     public List<String> getRoles() {
         return roles;
     }
 
+    public void addRole(String playerName, String role) throws IOException {
+        FileConfiguration playerInfo = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+        List<String> roles = getRoles();
+        roles.add(role);
+        playerInfo.set("roles", role);
+        playerInfo.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+    }
+
+    public void removeRole (String playerName, String role) throws IOException {
+        FileConfiguration playerInfo = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+        List<String> roles = getRoles();
+        roles.remove(role);
+        playerInfo.set("roles", role);
+        playerInfo.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+    }
+
     public long getLastJoinTime() {
         return lastJoinTime;
     }
 
+    public void setLastJoinTime (String playerName, long time) throws IOException {
+        FileConfiguration playerInfo = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+        playerInfo.set("lastJoinTime." + playerName, time);
+        playerInfo.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+    }
+
     public long getLastGameTime() {
         return lastGameTime;
+    }
+
+    public void setLastGameTime (String playerName, long time) throws IOException {
+        FileConfiguration playerInfo = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
+        playerInfo.set("lastGameTime." + playerName, time);
+        playerInfo.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
     }
 
     public String getLastWorld() {

@@ -41,7 +41,9 @@ public class createGameCommand implements CommandExecutor, TabCompleter {
                 try {
                     gameInfo.setPlayerTeam(sender.getName(), "blue");
                     gameInfo.setPlayerActiveRole(sender.getName(), "elfs");
-                    data.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + sender.getName() + ".yml"));
+                    gameInfo.setPlayerBalance(sender.getName(), 200);
+                    gameInfo.setPlayerTowerLimit(sender.getName(), gameInfo.getExpectedPerTeamTowers()/gameInfo.getTeamList(gameInfo.getPlayerTeam(sender.getName())).size());
+                    gameInfo.setPlayerIncome(sender.getName(), 20);
                 } catch (IOException e) {
                     errorUtil.error(null, e.getLocalizedMessage());
                 }
