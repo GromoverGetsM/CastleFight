@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.castlefight.modules.GameInfo;
+import ru.rstudios.castlefight.tasks.IncomeTask;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,7 @@ public class createGameCommand implements CommandExecutor, TabCompleter {
                     gameInfo.setPlayerBalance(sender.getName(), 200);
                     gameInfo.setPlayerTowerLimit(sender.getName(), gameInfo.getExpectedPerTeamTowers()/gameInfo.getTeamList(gameInfo.getPlayerTeam(sender.getName())).size());
                     gameInfo.setPlayerIncome(sender.getName(), 20);
+                    Bukkit.getScheduler().runTaskTimer(plugin, new IncomeTask(sender.getName()), 0, 20);
                 } catch (IOException e) {
                     errorUtil.error(null, e.getLocalizedMessage());
                 }
@@ -52,6 +53,7 @@ public class createGameCommand implements CommandExecutor, TabCompleter {
         }
         return true;
     }
+
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {

@@ -29,8 +29,10 @@ public final class CastleFight extends JavaPlugin {
     public static ItemUtil itemUtil;
     public static MessagesUtil messagesUtil;
     public static ParticleUtil particleUtil;
+    public static PlaceholderUtil placeholderUtil;
     public static RelativeStructureUtil relativeStructureUtil;
     public static RoleUtil roleUtil;
+    public static ScoreBoardUtil scoreBoardUtil;
     public static TowerUtil towerUtil;
     public static UnitCreator unitCreator;
     public static WorldCreator worldCreator;
@@ -53,8 +55,10 @@ public final class CastleFight extends JavaPlugin {
         itemUtil = new ItemUtil();
         messagesUtil = new MessagesUtil();
         particleUtil = new ParticleUtil();
+        placeholderUtil = new PlaceholderUtil();
         relativeStructureUtil = new RelativeStructureUtil();
         roleUtil = new RoleUtil();
+        scoreBoardUtil = new ScoreBoardUtil();
         towerUtil = new TowerUtil();
         unitCreator = new UnitCreator();
         worldCreator = new WorldCreator();
@@ -122,6 +126,6 @@ public final class CastleFight extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        Bukkit.getScheduler().cancelTasks(this);
     }
 }

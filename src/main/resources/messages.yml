@@ -141,6 +141,9 @@ castlefight:
   income:
     unitkilledenemy: "&8» &fВы получили &e$5 &8«"
 
+  scoreboards:
+
+
   menus:
     towers_elfs:
       title: "&8» Покупка башен: &aЭльфы"
