@@ -26,7 +26,7 @@ public class WorldCreator {
 
         do {
             ID = random.nextInt(1, 1000000);
-        } while (games.getString(ID + "_" + players) != null);
+        } while (games.getString(String.valueOf(ID)) != null);
 
         Bukkit.createWorld(new org.bukkit.WorldCreator(String.valueOf(ID)));
         Bukkit.unloadWorld(String.valueOf(ID), true);
