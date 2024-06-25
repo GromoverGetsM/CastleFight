@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import ru.rstudios.castlefight.modules.PlayerInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,10 +65,25 @@ public class WorldCreator {
         World world = Bukkit.getWorld(String.valueOf(ID));
         if (world != null) {
             File worldFile = new File(Bukkit.getServer().getWorldContainer() + File.separator + ID + File.separator);
+            bossBarUtil.deleteBossbar(ID + "_redTeam");
+            bossBarUtil.deleteBossbar(ID + "_blueTeam");
 
             for (Player player : world.getPlayers()) {
                 player.sendMessage(messagesUtil.messageString("castlefight.main.game-ended"));
                 player.teleport(new Location(Bukkit.getWorld("world"), 0, 64, 0));
+                PlayerInfo playerInfo = new PlayerInfo(player.getName());
+                List<Integer> tasks = playerInfo.getTasksID();
+
+                if (!tasks.isEmpty()) {
+                    for (int taskID : tasks) {
+                        Bukkit.getScheduler().cancelTask(taskID);
+                    }
+
+                    tasks.clear();
+                }
+
+                playerInfo.setTasks(player.getName(), tasks);
+                scoreBoardUtil.deleteScoreboard(player.getName() + "_" + ID, player.getName());
             }
 
             Bukkit.unloadWorld(world, false);

@@ -12,10 +12,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import ru.rstudios.castlefight.modules.ClickActions;
+import ru.rstudios.castlefight.modules.PlayerInfo;
 import ru.rstudios.castlefight.tasks.ClickActionsHandlerTask;
 import ru.rstudios.castlefight.tasks.UnitSpawner;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +98,13 @@ public class clickInventoryItem implements Listener {
                                                     holoUtil.addHoloLine(viewLoc.getWorld(), player.getName()+"_"+tower+"_"+level+"_"+id, "§b██████████", 2);
 
                                                     HashMap<String, Object> unitData = roleUtil.getRoleUnitData(role, tower, level);
-                                                    Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(viewLoc.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), viewLoc), 0, 1);
+                                                    int taskID = Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(viewLoc.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), viewLoc), 0, 1).getTaskId();
+                                                    PlayerInfo playerInfo = new PlayerInfo(player.getName());
+                                                    try {
+                                                        playerInfo.addTaskId(player.getName(), taskID);
+                                                    } catch (IOException e) {
+                                                        errorUtil.error(null, e.getLocalizedMessage());
+                                                    }
                                                 }
                                             });
                                         } else {

@@ -13,10 +13,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.jetbrains.annotations.NotNull;
 import ru.rstudios.castlefight.modules.GameInfo;
+import ru.rstudios.castlefight.modules.PlayerInfo;
 import ru.rstudios.castlefight.tasks.UnitSpawner;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,16 +59,7 @@ public class PlayerRightClickedListener implements Listener {
                     String tower = parts[1];
                     int level = Integer.parseInt(parts[2]);
 
-                    String str = parts[3].substring(9, parts[3].length() - 1);
-                    String[] parts2 = str.split(",");
-
-                    double x = Double.parseDouble(parts2[1].substring(parts2[1].indexOf('=') + 1));
-                    double y = Double.parseDouble(parts2[2].substring(parts2[2].indexOf('=') + 1));
-                    double z = Double.parseDouble(parts2[3].substring(parts2[3].indexOf('=') + 1));
-                    float pitch = Float.parseFloat(parts2[4].substring(parts2[4].indexOf('=') + 1));
-                    float yaw = Float.parseFloat(parts2[5].substring(parts2[5].indexOf('=') + 1));
-
-                    Location LBLoc = new Location(player.getWorld(), x, y, z, yaw, pitch);
+                    Location LBLoc = getLocation(parts, player);
 
                     if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_AXE) {
                         File mainFolder = new File(plugin.getDataFolder(), "roles");
@@ -107,7 +101,13 @@ public class PlayerRightClickedListener implements Listener {
                                             holoUtil.addHoloLine(leftBottom.getWorld(), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, "§b██████████", 2);
 
                                             HashMap<String, Object> unitData = roleUtil.getRoleUnitData(role, tower, level);
-                                            Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(leftBottom.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), leftBottom), 0, 1);
+                                            int taskID = Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(leftBottom.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), leftBottom), 0, 1).getTaskId();
+                                            PlayerInfo playerInfo = new PlayerInfo(player.getName());
+                                            try {
+                                                playerInfo.addTaskId(player.getName(), taskID);
+                                            } catch (IOException e) {
+                                                errorUtil.error(null, e.getLocalizedMessage());
+                                            }
                                         }
                                     });
                                 }
@@ -127,6 +127,20 @@ public class PlayerRightClickedListener implements Listener {
                 }
             }
         }
+    }
+
+    @NotNull
+    private static Location getLocation(String[] parts, Player player) {
+        String str = parts[3].substring(9, parts[3].length() - 1);
+        String[] parts2 = str.split(",");
+
+        double x = Double.parseDouble(parts2[1].substring(parts2[1].indexOf('=') + 1));
+        double y = Double.parseDouble(parts2[2].substring(parts2[2].indexOf('=') + 1));
+        double z = Double.parseDouble(parts2[3].substring(parts2[3].indexOf('=') + 1));
+        float pitch = Float.parseFloat(parts2[4].substring(parts2[4].indexOf('=') + 1));
+        float yaw = Float.parseFloat(parts2[5].substring(parts2[5].indexOf('=') + 1));
+
+        return new Location(player.getWorld(), x, y, z, yaw, pitch);
     }
 
 }

@@ -2,17 +2,6 @@
 # RStudios @ 2024                            #
 # Not for public distribute                  #
 #                                            #
-# Плейсхолдеры:                              #
-#                                            #
-# %error% - произошедшая ошибка              #
-# %message% - сообщение из кфг               #
-# %value% - некоторое значение               #
-# %level% - ур. башни                        #
-# %tower% - название башни                   #
-# %role% - название роли                     #
-# %player% - имя игрока. Только в            #
-# onClick.                                   #
-#                                            #
 # Управление предметами в меню:              #
 #                                            #
 # name - название предмета                   #
@@ -79,6 +68,32 @@
 # level - указатель уровня                   #
 ##############################################
 
+# Активные плейсхолдеры (применимо в любом сообщении):
+# Плейсхолдеры, которые по каким-либо причинам пусты заменены не будут.
+#
+# %player% - возвращает ник игрока
+# %money% - возвращает баланс игрока (хаб)
+# %rating% - возвращает рейтинг игрока
+# %gameID% - возвращает текущую игру игрока
+# %lastJoinTime% - возвращает последний вход игрока (Unix Milliseconds)
+# %lastGameTime% - возвращает последнюю начатую игру игрока (Unix Milliseconds)
+# %lastWorld% - возвращает последний мир игрока
+# %nowWorld% - возвращает текущий мир игрока (если онлайн)
+#
+# Игровые плейсхолдеры (только если gameID игрока != -1)
+# %income% - возвращает доход игрока (/10s)
+# %expectedPlayers% - возвращает запланированное количество игроков на матч
+# %expectedPerTeamTowers% - возвращает запланированное количество башен на команду
+# %baseHealth% - возвращает максимальное здоровье у главного здания
+# %blueHealth% - возвращает текущее здоровье синей команды
+# %redHealth% - возвращает текущее здоровье красной команды
+# %activeRole% - возвращает роль игрока, за которую он сейчас играет
+# %ingameMoney% - возвращает баланс игрока в матче
+# %towerLimit% - возвращает лимит зданий игрока в матче
+# %team% - возвращает команду игрока, за которую он играет
+#
+# !! Плейсхолдеры сообщений %role%, %tower%, %level%, %error%, %message% не будут заменены вне своих сообщений
+
 messages-version: 1.4
 
 castlefight:
@@ -102,6 +117,7 @@ castlefight:
     tower-not-found: "&cСтруктура башни не найдена."
     tower-not-defined: "&cБашня не определена."
     unknown-unit-data: "&cВведённые данные не совпадают ни с одним из возможных вариантов. Создание юнита отменено."
+    placeholder-not-found: "&cПлейсхолдер не найден."
 
   commands:
     gamemode:
@@ -111,8 +127,8 @@ castlefight:
     stats:
       usage: "/stats <money/rating>"
       no-permission: "&cНет прав."
-      rating: "&dCastleFight &8» &fВаш рейтинг: &d%value%&f."
-      money: "&dCastleFight &8» &fВаш баланс: &d%value%&f."
+      rating: "&dCastleFight &8» &fВаш рейтинг: &d%rating%&f."
+      money: "&dCastleFight &8» &fВаш баланс: &d%money%&f."
 
     structure:
       usage: "/structure <save|load> <roleName> <towerName> <towerLevel>"
@@ -125,6 +141,10 @@ castlefight:
 
     openmenu:
       usage: "/openmenu <player> <menu>"
+
+    creategame:
+      preparing: "&dCastleFight &8» &fПодготавливаю игру, пожалуйста подождите..."
+      created: "&dCastleFight &8» &fСоздана игра &e#%id%"
 
   items:
     main_menu:

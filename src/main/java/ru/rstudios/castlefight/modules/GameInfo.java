@@ -10,16 +10,19 @@ import java.io.IOException;
 import java.util.*;
 
 public class GameInfo {
-    private final org.bukkit.Location redBase;
-    private final org.bukkit.Location blueBase;
-    private final int expectedPlayers;
-    private final int expectedPerTeamTowers;
+    private org.bukkit.Location redBase;
+    private org.bukkit.Location blueBase;
+    private int expectedPlayers;
+    private int expectedPerTeamTowers;
     private final Map<String, String> teamsInfo = new HashMap<>();
     private final Map<String, String> activeRoles = new HashMap<>();
     private final Map<String, Integer> balances = new HashMap<>();
     private final Map<String, Integer> incomes = new HashMap<>();
     private final Map<String, Integer> towerLimits = new HashMap<>();
-    private final int ID;
+    private int ID;
+    private int baseHealth;
+    private int blueHealth;
+    private int redHealth;
 
     public GameInfo (int id) {
         FileConfiguration gameInfo = YamlConfiguration.loadConfiguration(new File(Bukkit.getWorldContainer() + File.separator + id + File.separator + "mapInfo.yml"));
@@ -69,10 +72,95 @@ public class GameInfo {
         this.expectedPerTeamTowers = gameInfo.getInt("expectedPerTeamTowers");
         this.blueBase = new org.bukkit.Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("blueBase.x"), gameInfo.getInt("blueBase.y"), gameInfo.getInt("blueBase.z"));
         this.redBase = new org.bukkit.Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("redBase.x"), gameInfo.getInt("redBase.y"), gameInfo.getInt("redBase.z"));
+        this.baseHealth = gameInfo.getInt("baseHealth");
+        this.blueHealth = gameInfo.getInt("blueBase.nowHealth");
+        this.redHealth = gameInfo.getInt("redBase.nowHealth");
+    }
+
+    public void updateGameInfo (int id) {
+        FileConfiguration gameInfo = YamlConfiguration.loadConfiguration(new File(Bukkit.getWorldContainer() + File.separator + id + File.separator + "mapInfo.yml"));
+        teamsInfo.clear();
+        activeRoles.clear();
+        balances.clear();
+        incomes.clear();
+        towerLimits.clear();
+
+        if (gameInfo.contains("players")) {
+            Set<String> players = gameInfo.getConfigurationSection("players").getKeys(false);
+            for (String player : players) {
+                String team = gameInfo.getString("players." + player);
+                teamsInfo.put(player, team);
+            }
+        }
+
+        if (gameInfo.contains("activeRoles")) {
+            Set<String> players = gameInfo.getConfigurationSection("activeRoles").getKeys(false);
+            for (String player : players) {
+                String role = gameInfo.getString("activeRoles." + player);
+                activeRoles.put(player, role);
+            }
+        }
+
+        if (gameInfo.contains("playersBalances")) {
+            Set<String> players = gameInfo.getConfigurationSection("playersBalances").getKeys(false);
+            for (String player : players) {
+                int balance = gameInfo.getInt("playersBalances." + player);
+                balances.put(player, balance);
+            }
+        }
+
+        if (gameInfo.contains("playersIncomes")) {
+            Set<String> players = gameInfo.getConfigurationSection("playersIncomes").getKeys(false);
+            for (String player : players) {
+                int income = gameInfo.getInt("playersIncomes." + player);
+                incomes.put(player, income);
+            }
+        }
+
+        if (gameInfo.contains("playersTowerLimits")) {
+            Set<String> players = gameInfo.getConfigurationSection("playersTowerLimits").getKeys(false);
+            for (String player : players) {
+                int limit = gameInfo.getInt("playersTowerLimits." + player);
+                towerLimits.put(player, limit);
+            }
+        }
+
+        this.ID = id;
+        this.expectedPlayers = gameInfo.getInt("expectedPlayers");
+        this.expectedPerTeamTowers = gameInfo.getInt("expectedPerTeamTowers");
+        this.blueBase = new org.bukkit.Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("blueBase.x"), gameInfo.getInt("blueBase.y"), gameInfo.getInt("blueBase.z"));
+        this.redBase = new org.bukkit.Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("redBase.x"), gameInfo.getInt("redBase.y"), gameInfo.getInt("redBase.z"));
+        this.baseHealth = gameInfo.getInt("baseHealth");
+        this.blueHealth = gameInfo.getInt("blueBase.nowHealth");
+        this.redHealth = gameInfo.getInt("redBase.nowHealth");
     }
 
     public int getExpectedPerTeamTowers() {
         return expectedPerTeamTowers;
+    }
+
+    public int getBaseHealth() {
+        return this.baseHealth;
+    }
+
+    public int getBlueHealth() {
+        return this.blueHealth;
+    }
+
+    public int getRedHealth() {
+        return this.redHealth;
+    }
+
+    public void setBaseHealth(int health) throws IOException {
+        FileConfiguration gameInfo = YamlConfiguration.loadConfiguration(new File(Bukkit.getWorldContainer() + File.separator + ID + File.separator + "mapInfo.yml"));
+        gameInfo.set("baseHealth", health);
+        gameInfo.save(new File(Bukkit.getWorldContainer() + File.separator + ID + File.separator + "mapInfo.yml"));
+    }
+
+    public void setNowHealth (String team, int health) throws IOException {
+        FileConfiguration gameInfo = YamlConfiguration.loadConfiguration(new File(Bukkit.getWorldContainer() + File.separator + ID + File.separator + "mapInfo.yml"));
+        gameInfo.set(team + "Base.nowHealth", health);
+        gameInfo.save(new File(Bukkit.getWorldContainer() + File.separator + ID + File.separator + "mapInfo.yml"));
     }
 
     public List<String> getTeamList (String team) {

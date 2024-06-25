@@ -19,6 +19,7 @@ import java.util.Objects;
 public final class CastleFight extends JavaPlugin {
 
     public static JavaPlugin plugin;
+    public static BossBarUtil bossBarUtil;
     public static CountDamageUtil countDamageUtil;
     public static DataUtil dataUtil;
     public static ErrorUtil errorUtil;
@@ -45,6 +46,7 @@ public final class CastleFight extends JavaPlugin {
 
         getLogger().info("CastleFight загружает необходимые утилиты...");
         plugin = this;
+        bossBarUtil = new BossBarUtil();
         countDamageUtil = new CountDamageUtil();
         dataUtil = new DataUtil();
         errorUtil = new ErrorUtil();

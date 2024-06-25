@@ -1,7 +1,10 @@
 package ru.rstudios.castlefight.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,8 +14,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.castlefight.modules.GameInfo;
+import ru.rstudios.castlefight.modules.PlayerInfo;
 import ru.rstudios.castlefight.tasks.IncomeTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +29,7 @@ public class createGameCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (args.length >= 1) {
+            sender.sendMessage(messagesUtil.messageString("castlefight.commands.creategame.preparing"));
             int players = Integer.parseInt(args[0]);
             int ID = 0;
             try {
@@ -36,19 +42,34 @@ public class createGameCommand implements CommandExecutor, TabCompleter {
                 FileConfiguration data = dataUtil.loadPlayerData(sender.getName());
                 data.set("gameID", ID);
                 data.set("lastGameTime", System.currentTimeMillis());
+                try {
+                    data.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + sender.getName() + ".yml"));
+                } catch (IOException e) {
+                    errorUtil.error(null, e.getLocalizedMessage());
+                }
 
                 GameInfo gameInfo = new GameInfo(ID);
+                sender.sendMessage(messagesUtil.messageString("castlefight.commands.creategame.created", sender.getName()));
                 try {
                     gameInfo.setPlayerTeam(sender.getName(), "blue");
                     gameInfo.setPlayerActiveRole(sender.getName(), "elfs");
                     gameInfo.setPlayerBalance(sender.getName(), 200);
-                    gameInfo.setPlayerTowerLimit(sender.getName(), gameInfo.getExpectedPerTeamTowers()/gameInfo.getTeamList(gameInfo.getPlayerTeam(sender.getName())).size());
                     gameInfo.setPlayerIncome(sender.getName(), 20);
-                    Bukkit.getScheduler().runTaskTimer(plugin, new IncomeTask(sender.getName()), 0, 20);
+                    gameInfo.updateGameInfo(ID);
+                    int TaskID = Bukkit.getScheduler().runTaskTimer(plugin, new IncomeTask(sender.getName()), 0, 20).getTaskId();
+                    PlayerInfo playerInfo = new PlayerInfo(sender.getName());
+                    playerInfo.addTaskId(sender.getName(), TaskID);
+                    gameInfo.setPlayerTowerLimit(sender.getName(), gameInfo.getExpectedPerTeamTowers()/gameInfo.getTeamList(gameInfo.getPlayerTeam(sender.getName())).size());
+                    gameInfo.updateGameInfo(ID);
                 } catch (IOException e) {
                     errorUtil.error(null, e.getLocalizedMessage());
                 }
                 ((Player) sender).teleport(new Location(Bukkit.getWorld(String.valueOf(ID)), 0, 64, 0));
+                bossBarUtil.createBossbar(Bukkit.getWorld(String.valueOf(ID)), ID + "_redTeam", ChatColor.translateAlternateColorCodes('&', placeholderUtil.replacePlaceholders(ID, "&f[&c%redHealth%&f/&c%baseHealth%&f]")), BarColor.RED, BarStyle.SOLID,true, 1);
+                bossBarUtil.createBossbar(Bukkit.getWorld(String.valueOf(ID)), ID + "_blueTeam", ChatColor.translateAlternateColorCodes('&', placeholderUtil.replacePlaceholders(ID, "&f[&c%blueHealth%&f/&c%baseHealth%&f]")), BarColor.BLUE, BarStyle.SOLID,true, 1);
+
+                scoreBoardUtil.createScoreboard(sender.getName() + "_" + ID, "§e§lCASTLEFIGHT");
+                scoreBoardUtil.showScoreboard(sender.getName() + "_" + ID, sender.getName());
             }
         }
         return true;

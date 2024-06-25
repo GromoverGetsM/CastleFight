@@ -24,6 +24,7 @@ public class IncomeTask implements Runnable {
 
         if (playerInfo.getGameID() != -1) {
             gameInfo = new GameInfo(playerInfo.getGameID());
+            gameInfo.updateGameInfo(playerInfo.getGameID());
             income = gameInfo.getPlayerIncome(playerName);
             this.income = income;
         }

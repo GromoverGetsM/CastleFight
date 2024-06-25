@@ -20,8 +20,7 @@ public class statsCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) sender;
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("rating") || args[0].equalsIgnoreCase("money")) {
-                    String data = dataUtil.returnData(player.getName(), args[0].toLowerCase());
-                    sender.sendMessage(messagesUtil.messageString("castlefight.commands.stats."+args[0].toLowerCase()).replace("%value%", data));
+                    sender.sendMessage(messagesUtil.messageString("castlefight.commands.stats."+args[0].toLowerCase()), player.getName());
                 }
             } else {
                 player.sendMessage(messagesUtil.messageString("castlefight.commands.stats.usage"));

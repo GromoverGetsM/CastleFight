@@ -15,35 +15,36 @@ import java.util.Map;
 
 public class ScoreBoardUtil {
 
-    private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
-    private static final Map<String, Scoreboard> scoreboards = new HashMap<>();
+    private final ScoreboardManager manager = Bukkit.getScoreboardManager();
+    private final Map<String, Scoreboard> scoreboards = new HashMap<>();
 
-    public static void createScoreboard(String name, String displayName) {
+    public void createScoreboard(String name, String displayName) {
         Scoreboard board = manager.getNewScoreboard();
         Objective objective = board.registerNewObjective(name, "dummy", ChatColor.translateAlternateColorCodes('&', displayName));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         scoreboards.put(name, board);
     }
 
-    public static void deleteScoreboard(String name) {
+    public void deleteScoreboard(String name, String playerName) {
+        hideScoreboard(name, playerName);
         scoreboards.remove(name);
     }
 
-    public static void showScoreboard(String name, String playerName) {
+    public void showScoreboard(String name, String playerName) {
         Player player = Bukkit.getPlayer(playerName);
         if (player != null && scoreboards.containsKey(name)) {
             player.setScoreboard(scoreboards.get(name));
         }
     }
 
-    public static void hideScoreboard(String name, String playerName) {
+    public void hideScoreboard(String name, String playerName) {
         Player player = Bukkit.getPlayer(playerName);
         if (player != null && scoreboards.containsKey(name)) {
             player.setScoreboard(manager.getNewScoreboard());
         }
     }
 
-    public static void setScore(String scoreboardName, String text, int score) {
+    public void setScore(String scoreboardName, String text, int score) {
         if (scoreboards.containsKey(scoreboardName)) {
             Scoreboard board = scoreboards.get(scoreboardName);
             Objective objective = board.getObjective(scoreboardName);
@@ -54,7 +55,7 @@ public class ScoreBoardUtil {
         }
     }
 
-    public static void removeScore(String scoreboardName, int score) {
+    public void removeScore(String scoreboardName, int score) {
         if (scoreboards.containsKey(scoreboardName)) {
             Scoreboard board = scoreboards.get(scoreboardName);
             Objective objective = board.getObjective(scoreboardName);
@@ -69,7 +70,7 @@ public class ScoreBoardUtil {
         }
     }
 
-    public static void loadScoreboard(List<String> lines, String scoreboardName) {
+    public void loadScoreboard(List<String> lines, String scoreboardName) {
         if (scoreboards.containsKey(scoreboardName)) {
             Scoreboard board = scoreboards.get(scoreboardName);
             Objective objective = board.getObjective(scoreboardName);
