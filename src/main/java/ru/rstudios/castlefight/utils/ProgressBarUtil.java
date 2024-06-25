@@ -6,8 +6,6 @@ import org.bukkit.metadata.MetadataValue;
 import java.util.List;
 import java.util.Locale;
 
-import static ru.rstudios.castlefight.CastleFight.holoUtil;
-
 public class ProgressBarUtil {
     public static void createProgressBar(int passed, int all, double progress, Location leftBottomAngle) {
         int greenBars = (int) (progress * 10);

@@ -10,8 +10,6 @@ import ru.rstudios.castlefight.utils.ErrorUtil;
 
 import java.io.IOException;
 
-import static ru.rstudios.castlefight.CastleFight.errorUtil;
-
 public class ClickActionsHandlerTask implements Runnable {
 
     private final String playerName;

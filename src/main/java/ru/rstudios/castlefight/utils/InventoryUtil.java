@@ -21,9 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import static ru.rstudios.castlefight.CastleFight.fileUtil;
-import static ru.rstudios.castlefight.CastleFight.messagesUtil;
-
 public class InventoryUtil {
 
     public static Inventory inventoryFromConfig(@NotNull String configName, @NotNull Player player) {

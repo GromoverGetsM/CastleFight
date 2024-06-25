@@ -8,7 +8,6 @@ import ru.rstudios.castlefight.modules.GameInfo;
 import ru.rstudios.castlefight.modules.PlayerInfo;
 import ru.rstudios.castlefight.utils.MessagesUtil;
 
-import static ru.rstudios.castlefight.CastleFight.messagesUtil;
 import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class IncomeTask implements Runnable {

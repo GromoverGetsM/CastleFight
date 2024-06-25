@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-import static ru.rstudios.castlefight.CastleFight.errorUtil;
 import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class DataUtil {

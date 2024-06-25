@@ -11,8 +11,6 @@ import ru.rstudios.castlefight.utils.ScoreBoardUtil;
 import java.io.IOException;
 import java.util.List;
 
-import static ru.rstudios.castlefight.CastleFight.scoreBoardUtil;
-
 public class PlayerLeft implements Listener {
     @EventHandler
     public void onPlayerLeft (PlayerQuitEvent event) throws IOException {

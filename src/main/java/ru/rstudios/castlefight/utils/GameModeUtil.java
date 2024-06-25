@@ -4,8 +4,6 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import static ru.rstudios.castlefight.CastleFight.errorUtil;
-
 public class GameModeUtil implements Listener {
 
     private static GameMode mode = null;
