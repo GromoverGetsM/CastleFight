@@ -1,24 +1,22 @@
 package ru.rstudios.castlefight.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.*;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.rstudios.castlefight.utils.ErrorUtil;
+import ru.rstudios.castlefight.utils.MessagesUtil;
+import ru.rstudios.castlefight.utils.UnitCreator;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static ru.rstudios.castlefight.CastleFight.*;
+import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class spawnCommand implements CommandExecutor, TabCompleter {
 
@@ -29,12 +27,12 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
             if (args.length == 7) {
                 Location spawn = player.getLocation();
                 Location enemyBase = new Location(((Player) sender).getWorld(), Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));
-                unitCreator.createUnit(player.getName(), args[0], args[1], Integer.parseInt(args[2]), args[3], enemyBase, spawn);
+                UnitCreator.createUnit(player.getName(), args[0], args[1], Integer.parseInt(args[2]), args[3], enemyBase, spawn);
             } else {
-                player.sendMessage(messagesUtil.messageString("castlefight.commands.spawn.usage"));
+                player.sendMessage(MessagesUtil.messageString("castlefight.commands.spawn.usage"));
             }
         } else {
-            errorUtil.errorfromconfig(null, "castlefight.errors.only-player");
+            ErrorUtil.errorfromconfig(null, "castlefight.errors.only-player");
         }
         return true;
     }
@@ -79,17 +77,5 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
             default:
                 return pArgs;
         }
-    }
-
-    private String getColorCode(String name) {
-        if (name == null || name.isEmpty()) {
-            return "";
-        }
-        return name.substring(0, 2);
-    }
-
-    private boolean hasSameColorCode(LivingEntity entity, String colorCode) {
-        String entityName = entity.getCustomName();
-        return entityName != null && entityName.startsWith(colorCode);
     }
 }

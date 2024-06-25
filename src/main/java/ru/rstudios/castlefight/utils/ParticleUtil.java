@@ -2,11 +2,9 @@ package ru.rstudios.castlefight.utils;
 
 import org.bukkit.*;
 
-import static ru.rstudios.castlefight.CastleFight.plugin;
-
 public class ParticleUtil {
 
-    public void createParticleBlock(Location location) {
+    public static void createParticleBlock(Location location) {
         World world = location.getWorld();
         if (world == null) return;
 
@@ -26,7 +24,7 @@ public class ParticleUtil {
         }
     }
 
-    public void createParticleMultiblock3x3(Location location) {
+    public static void createParticleMultiblock3x3(Location location) {
         World world = location.getWorld();
         if (world == null) return;
 

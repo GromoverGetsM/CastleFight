@@ -20,9 +20,9 @@ public class UnitCreator {
 
 
 
-    public void createUnit (String unitOwner, String role, String tower, int level, String team, Location target, Location spawn) {
-        if (roleUtil.getRoleUnitData(role, tower, level) != null) {
-            HashMap<String, Object> unitData = roleUtil.getRoleUnitData(role, tower, level);
+    public static void createUnit (String unitOwner, String role, String tower, int level, String team, Location target, Location spawn) {
+        if (RoleUtil.getRoleUnitData(role, tower, level) != null) {
+            HashMap<String, Object> unitData = RoleUtil.getRoleUnitData(role, tower, level);
 
             Entity entity = spawn.getWorld().spawnEntity(spawn, EntityType.valueOf(unitData.get("EntityType").toString()));
             if (team.equals("red")) {
@@ -46,9 +46,8 @@ public class UnitCreator {
             Objects.requireNonNull(livingEntity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(0);
             Objects.requireNonNull(livingEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(0.175);
 
-            Damageable damageable = livingEntity;
-            damageable.setMaxHealth(Integer.parseInt(unitData.get("Health").toString()));
-            damageable.setHealth(Integer.parseInt(unitData.get("Health").toString()));
+            livingEntity.setMaxHealth(Integer.parseInt(unitData.get("Health").toString()));
+            livingEntity.setHealth(Integer.parseInt(unitData.get("Health").toString()));
 
             ((Mob) entity).setTarget(null);
 
@@ -75,7 +74,7 @@ public class UnitCreator {
                             .min(Comparator.comparingDouble(e -> e.getLocation().distance(entity.getLocation())))
                             .orElse(null);
 
-                    if (currentTarget[0] != null && entity instanceof Mob && !(entity instanceof Player)) {
+                    if (currentTarget[0] != null && !(entity instanceof Player)) {
                         ((Mob) entity).setTarget(currentTarget[0]);
                     } else if (currentTarget[0] == null) {
                         ((Mob) entity).setTarget(null);
@@ -93,23 +92,23 @@ public class UnitCreator {
                     }
 
                     if (currentTarget[0] != null && !currentTarget[0].isDead() && currentTarget[0].getLocation().distance(entity.getLocation()) <= 2) {
-                        currentTarget[0].damage(countDamageUtil.getUnitDamage(entity, currentTarget[0], Double.parseDouble(unitData.get("Damage").toString())), entity);
+                        currentTarget[0].damage(CountDamageUtil.getUnitDamage(entity, currentTarget[0], Double.parseDouble(unitData.get("Damage").toString())), entity);
                     }
                 }
             }.runTaskTimer(plugin, 0, Integer.parseInt(unitData.get("Cooldown").toString()));
         } else {
-            errorUtil.errorfromconfig(null, "castlefight.errors.unknown-unit-data");
+            ErrorUtil.errorfromconfig(null, "castlefight.errors.unknown-unit-data");
         }
     }
 
-    private String getColorCode(String name) {
+    private static String getColorCode(String name) {
         if (name == null || name.isEmpty()) {
             return "";
         }
         return name.substring(0, 2);
     }
 
-    private boolean hasSameColorCode(LivingEntity entity, String colorCode) {
+    private static boolean hasSameColorCode(LivingEntity entity, String colorCode) {
         String entityName = entity.getCustomName();
         return entityName != null && entityName.startsWith(colorCode);
     }

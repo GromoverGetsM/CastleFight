@@ -9,7 +9,7 @@ import java.util.Locale;
 import static ru.rstudios.castlefight.CastleFight.holoUtil;
 
 public class ProgressBarUtil {
-    private void createProgressBar(int passed, int all, double progress, Location leftBottomAngle) {
+    public static void createProgressBar(int passed, int all, double progress, Location leftBottomAngle) {
         int greenBars = (int) (progress * 10);
         int redBars = 10 - greenBars;
         int ticksRemaining = passed - all;
@@ -22,7 +22,7 @@ public class ProgressBarUtil {
 
         List<MetadataValue> holoName = leftBottomAngle.getBlock().getMetadata("holoName");
         if (!holoName.isEmpty()) {
-            holoUtil.setHoloLine(leftBottomAngle.getWorld(), holoName.get(0).asString(), progressBar.toString(), 2);
+            HoloUtil.setHoloLine(leftBottomAngle.getWorld(), holoName.get(0).asString(), progressBar.toString(), 2);
         }
     }
 }

@@ -14,7 +14,7 @@ import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class HoloUtil {
 
-    public void createHologram (Location l, String name, String displayName) {
+    public static void createHologram (Location l, String name, String displayName) {
         ArmorStand a = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
 
         PersistentDataContainer pdc = a.getPersistentDataContainer();
@@ -29,7 +29,7 @@ public class HoloUtil {
         a.setCustomNameVisible(true);
     }
 
-    public void deleteHolo (World world, String name) {
+    public static void deleteHolo (World world, String name) {
         for (Entity entity : world.getEntities()) {
             if (entity instanceof ArmorStand) {
                 PersistentDataContainer pdc = entity.getPersistentDataContainer();
@@ -43,7 +43,7 @@ public class HoloUtil {
         }
     }
 
-    public void createHoloLine (Location l, String name, String displayName, int line) {
+    public static void createHoloLine (Location l, String name, String displayName, int line) {
         ArmorStand a = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
 
         PersistentDataContainer pdc = a.getPersistentDataContainer();
@@ -58,7 +58,7 @@ public class HoloUtil {
         a.setCustomNameVisible(true);
     }
 
-    public void addHoloLine (World world, String name, String text, int line) {
+    public static void addHoloLine (World world, String name, String text, int line) {
         int maxLine = 0;
         Location lastArmorStandLocation = null;
 
@@ -83,7 +83,7 @@ public class HoloUtil {
         }
     }
 
-    public void setHoloLine (World world, String name, String text, int line) {
+    public static void setHoloLine (World world, String name, String text, int line) {
         for (Entity entity : world.getEntities()) {
             if (entity instanceof ArmorStand) {
                 PersistentDataContainer pdc = entity.getPersistentDataContainer();
@@ -102,7 +102,7 @@ public class HoloUtil {
         }
     }
 
-    public void deleteHoloLine (World world, String name, int line) {
+    public static void deleteHoloLine (World world, String name, int line) {
         boolean hasMoreLines = false;
         HashMap<Entity, Location> moreLines = new HashMap<>();
 

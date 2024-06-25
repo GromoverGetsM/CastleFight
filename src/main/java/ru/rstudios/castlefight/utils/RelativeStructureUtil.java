@@ -1,6 +1,5 @@
 package ru.rstudios.castlefight.utils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,10 +10,9 @@ import java.util.Map;
 
 import static ru.rstudios.castlefight.CastleFight.plugin;
 
-// return roleName+"|"+towerName+"|"+Integer.parseInt(levelFile.getName().substring(0, levelFile.getName().indexOf(".")));
 public class RelativeStructureUtil {
 
-    public String findTower(String blockType, Location loc) {
+    public static String findTower(String blockType, Location loc) {
         File mainFolder = new File(plugin.getDataFolder(), "roles");
 
         for (File roleFolder : mainFolder.listFiles()) {
@@ -46,9 +44,8 @@ public class RelativeStructureUtil {
                                             if (dx == 0 && dy == 0 && dz == 0) {
                                                 String dtype = (String) blockData2.get("type");
                                                 if (pLocation.getBlock().getType().name().equals(dtype)) {
-                                                    Location LBLocation = pLocation;
-                                                    if (checkStructure(structureConfig, LBLocation)) {
-                                                        return roleName+"|"+towerName+"|"+Integer.parseInt(levelFile.getName().substring(0, levelFile.getName().indexOf(".")))+"|"+LBLocation;
+                                                    if (checkStructure(structureConfig, pLocation)) {
+                                                        return roleName+"|"+towerName+"|"+Integer.parseInt(levelFile.getName().substring(0, levelFile.getName().indexOf(".")))+"|"+ pLocation;
                                                     } else {
                                                         break;
                                                     }
@@ -67,7 +64,7 @@ public class RelativeStructureUtil {
         return null;
     }
 
-    public boolean checkStructure (List<Map<?, ?>> structureConfig, Location LBLocation) {
+    public static boolean checkStructure (List<Map<?, ?>> structureConfig, Location LBLocation) {
         boolean result = false;
 
         for (Map<?, ?> blockData : structureConfig) {
@@ -88,7 +85,7 @@ public class RelativeStructureUtil {
         return result;
     }
 
-    public int[] findTowerCoordinates(Location blockLoc, String role, String tower, int level) {
+    public static int[] findTowerCoordinates(Location blockLoc, String role, String tower, int level) {
         File mainFolder = new File(plugin.getDataFolder(), "roles");
         File roleFolder = new File(mainFolder, role);
         File towerFolder = new File(roleFolder, tower);

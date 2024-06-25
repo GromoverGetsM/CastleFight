@@ -20,18 +20,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
-import static ru.rstudios.castlefight.CastleFight.*;
+import static ru.rstudios.castlefight.CastleFight.fileUtil;
+import static ru.rstudios.castlefight.CastleFight.messagesUtil;
 
 public class InventoryUtil {
 
-    public Inventory inventoryFromConfig(@NotNull String configName, @NotNull Player player) {
-        FileConfiguration menuConfig = fileUtil.loadFile("messages.yml");
+    public static Inventory inventoryFromConfig(@NotNull String configName, @NotNull Player player) {
+        FileConfiguration menuConfig = FileUtil.loadFile("messages.yml");
         ConfigurationSection menuSection = menuConfig.getConfigurationSection("castlefight.menus." + configName);
 
         if (menuSection != null) {
-            Inventory inv = Bukkit.createInventory(player, menuConfig.getInt("castlefight.menus." + configName + ".size"), messagesUtil.messageString("castlefight.menus." + configName + ".title"));
+            Inventory inv = Bukkit.createInventory(player, menuConfig.getInt("castlefight.menus." + configName + ".size"), MessagesUtil.messageString("castlefight.menus." + configName + ".title"));
             ConfigurationSection itemsSection = menuConfig.getConfigurationSection("castlefight.menus." + configName + ".items");
 
             if (itemsSection != null) {
@@ -41,9 +41,7 @@ public class InventoryUtil {
                     List<String> lore = itemsSection.getStringList(key + ".lore");
                     List<String> enchants = itemsSection.getStringList(key + ".enchantments");
 
-                    for (int i = 0; i < lore.size(); i++) {
-                        lore.set(i, ChatColor.translateAlternateColorCodes('&', lore.get(i)));
-                    }
+                    lore.replaceAll(textToTranslate -> ChatColor.translateAlternateColorCodes('&', textToTranslate));
 
                     Material type = Material.matchMaterial(itemsSection.getString(key + ".type", "STONE"));
                     if (type == null) {
@@ -118,13 +116,12 @@ public class InventoryUtil {
 
             return inv;
         } else {
-            Inventory error = Bukkit.createInventory(player, 9, ChatColor.translateAlternateColorCodes('&', "&cИнвентарь не найден"));
-            return error;
+            return Bukkit.createInventory(player, 9, ChatColor.translateAlternateColorCodes('&', "&cИнвентарь не найден"));
         }
     }
 
 
-    private void addPermission (String name) {
+    private static void addPermission (String name) {
         PluginManager pluginManager = Bukkit.getPluginManager();
         Permission permission = new Permission(name);
         pluginManager.addPermission(permission);

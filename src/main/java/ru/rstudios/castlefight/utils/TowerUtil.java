@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 import static ru.rstudios.castlefight.CastleFight.*;
 
 public class TowerUtil {
-    public void saveStructure(String roleName, String towerName, int level, Location start) throws IOException {
+    public static void saveStructure(String roleName, String towerName, int level, Location start) throws IOException {
         File mainFolder = new File(plugin.getDataFolder(), "roles");
         File roleFolder = new File(mainFolder, roleName);
         File towerFolder = new File(roleFolder, towerName);
@@ -44,7 +44,7 @@ public class TowerUtil {
         config.save(levelFile);
     }
 
-    public CompletableFuture<Boolean> loadStructure(String roleName, String towerName, int level, Location start) {
+    public static CompletableFuture<Boolean> loadStructure(String roleName, String towerName, int level, Location start) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         File mainFolder = new File(plugin.getDataFolder(), "roles");
@@ -80,7 +80,7 @@ public class TowerUtil {
                 }
             }.runTaskTimer(plugin, 0, 5);
         } else {
-            errorUtil.errorfromconfig(null, "castlefight.errors.tower-not-found");
+            ErrorUtil.errorfromconfig(null, "castlefight.errors.tower-not-found");
             future.complete(false);
         }
 

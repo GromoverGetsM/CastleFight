@@ -7,16 +7,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.rstudios.castlefight.utils.ErrorUtil;
+import ru.rstudios.castlefight.utils.MessagesUtil;
+import ru.rstudios.castlefight.utils.TowerUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static ru.rstudios.castlefight.CastleFight.*;
-import static ru.rstudios.castlefight.CastleFight.errorUtil;
+import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class structureCommand implements CommandExecutor, TabCompleter {
 
@@ -37,11 +40,11 @@ public class structureCommand implements CommandExecutor, TabCompleter {
                             if (lookup != null && lookup.getType().getKey() != Material.AIR.getKey()) {
                                 Location loc = lookup.getLocation();
                                 try {
-                                    towerUtil.saveStructure(args[1], args[2], Integer.parseInt(args[3]), loc);
+                                    TowerUtil.saveStructure(args[1], args[2], Integer.parseInt(args[3]), loc);
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
-                                String message = messagesUtil.messageString("castlefight.commands.structure.saved");
+                                String message = MessagesUtil.messageString("castlefight.commands.structure.saved");
                                 sender.sendMessage(message.replace("%level%", args[3]).replace("%tower%", args[2]).replace("%role%", args[1]));
                             }
                             break;
@@ -49,8 +52,8 @@ public class structureCommand implements CommandExecutor, TabCompleter {
                             Block lookup2 = ((Player) sender).getTargetBlockExact(5);
                             if (lookup2 != null && lookup2.getType().getKey() != Material.AIR.getKey()) {
                                 Location loc = lookup2.getLocation();
-                                towerUtil.loadStructure(args[1], args[2], Integer.parseInt(args[3]), loc);
-                                String message = messagesUtil.messageString("castlefight.commands.structure.loading");
+                                TowerUtil.loadStructure(args[1], args[2], Integer.parseInt(args[3]), loc);
+                                String message = MessagesUtil.messageString("castlefight.commands.structure.loading");
                                 sender.sendMessage(message.replace("%level%", args[3]).replace("%tower%", args[2]).replace("%role%", args[1]));
                             }
                             break;
@@ -60,10 +63,10 @@ public class structureCommand implements CommandExecutor, TabCompleter {
                 }
 
             } else {
-                player.sendMessage(messagesUtil.messageString("castlefight.commands.structure.usage"));
+                player.sendMessage(MessagesUtil.messageString("castlefight.commands.structure.usage"));
             }
         } else {
-            errorUtil.errorfromconfig(null, "castlefight.errors.only-player");
+            ErrorUtil.errorfromconfig(null, "castlefight.errors.only-player");
         }
         return true;
     }

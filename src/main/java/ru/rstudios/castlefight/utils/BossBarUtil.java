@@ -6,15 +6,14 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
 public class BossBarUtil {
 
-    HashMap<String, BossBar> bossBarList = new HashMap<>();
+    private static final HashMap<String, BossBar> bossBarList = new HashMap<>();
 
-    public void createBossbar (World world, String name, String title, boolean show) {
+    public static void createBossbar (World world, String name, String title, boolean show) {
         BossBar bossBar = Bukkit.createBossBar(title, BarColor.RED, BarStyle.SOLID);
         bossBarList.put(name, bossBar);
 
@@ -26,7 +25,7 @@ public class BossBarUtil {
         }
     }
 
-    public void createBossbar (World world, String name, String title, BarColor color, BarStyle style, boolean show) {
+    public static void createBossbar (World world, String name, String title, BarColor color, BarStyle style, boolean show) {
         BossBar bossBar = Bukkit.createBossBar(title, color, style);
         bossBarList.put(name, bossBar);
 
@@ -38,7 +37,7 @@ public class BossBarUtil {
         }
     }
 
-    public void createBossbar (World world, String name, String title, BarColor color, BarStyle style, boolean show, double progress) {
+    public static void createBossbar (World world, String name, String title, BarColor color, BarStyle style, boolean show, double progress) {
         BossBar bossBar = Bukkit.createBossBar(title, color, style);
         bossBarList.put(name, bossBar);
 
@@ -53,14 +52,14 @@ public class BossBarUtil {
 
 
 
-    public void deleteBossbar (String name) {
+    public static void deleteBossbar (String name) {
         BossBar bossBar = bossBarList.get(name);
         bossBar.setVisible(false);
         bossBar.removeAll();
         bossBarList.remove(name);
     }
 
-    public void showBossbar (World world, String name) {
+    public static void showBossbar (World world, String name) {
         BossBar bossBar = bossBarList.get(name);
         bossBar.removeAll();
 
@@ -71,7 +70,7 @@ public class BossBarUtil {
         bossBar.setVisible(true);
     }
 
-    public void hideBossbar (World world, String name) {
+    public static void hideBossbar (World world, String name) {
         BossBar bossBar = bossBarList.get(name);
         bossBar.removeAll();
 
@@ -82,12 +81,12 @@ public class BossBarUtil {
         bossBar.setVisible(false);
     }
 
-    public void showBossbarForPlayer (Player player, String name) {
+    public static void showBossbarForPlayer (Player player, String name) {
         BossBar bossBar = bossBarList.get(name);
         bossBar.addPlayer(player);
     }
 
-    public void setProgress (String name, double progress) {
+    public static void setProgress (String name, double progress) {
         BossBar bossBar = bossBarList.get(name);
         bossBarList.remove(name);
 
@@ -95,12 +94,12 @@ public class BossBarUtil {
         bossBarList.put(name, bossBar);
     }
 
-    public void hideBossbarForPlayer (Player player, String name) {
+    public static void hideBossbarForPlayer (Player player, String name) {
         BossBar bossBar = bossBarList.get(name);
         bossBar.removePlayer(player);
     }
 
-    public void setBossBarTitle (String name, String title) {
+    public static void setBossBarTitle (String name, String title) {
         BossBar bossBar = bossBarList.get(name);
         bossBarList.remove(name);
 
@@ -108,7 +107,7 @@ public class BossBarUtil {
         bossBarList.put(name, bossBar);
     }
 
-    public void setBossBarColor (String name, BarColor color) {
+    public static void setBossBarColor (String name, BarColor color) {
         BossBar bossBar = bossBarList.get(name);
         bossBarList.remove(name);
 
@@ -116,7 +115,7 @@ public class BossBarUtil {
         bossBarList.put(name, bossBar);
     }
 
-    public void setBossBarStyle (String name, BarStyle style) {
+    public static void setBossBarStyle (String name, BarStyle style) {
         BossBar bossBar = bossBarList.get(name);
         bossBarList.remove(name);
 

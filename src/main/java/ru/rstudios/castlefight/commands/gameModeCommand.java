@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ru.rstudios.castlefight.utils.ErrorUtil;
+import ru.rstudios.castlefight.utils.GameModeUtil;
 
 import static ru.rstudios.castlefight.CastleFight.*;
 
@@ -15,9 +17,9 @@ public class gameModeCommand implements CommandExecutor {
         switch (args.length) {
             case 1:
                 if (sender instanceof Player) {
-                    gameModeUtil.SetMode(args[0], (Player) sender);
+                    GameModeUtil.SetMode(args[0], (Player) sender);
                 } else {
-                    errorUtil.errorfromconfig(null, "castlefight.commands.gamemode.no-permission");
+                    ErrorUtil.errorfromconfig(null, "castlefight.commands.gamemode.no-permission");
                 }
                 break;
 
@@ -26,27 +28,27 @@ public class gameModeCommand implements CommandExecutor {
                     Player player = Bukkit.getPlayer(args[1]);
                     if (player == null) {
                         if (sender instanceof Player) {
-                            errorUtil.errorfromconfig((Player) sender, "castlefight.errors.player-not-found");
+                            ErrorUtil.errorfromconfig((Player) sender, "castlefight.errors.player-not-found");
                         } else {
-                            errorUtil.errorfromconfig(null, "castlefight.errors.player-not-found");
+                            ErrorUtil.errorfromconfig(null, "castlefight.errors.player-not-found");
                         }
                     } else {
-                        gameModeUtil.SetMode(args[0], player);
+                        GameModeUtil.SetMode(args[0], player);
                     }
                 } else {
                     if (sender instanceof Player) {
-                        gameModeUtil.SetMode(args[0], (Player) sender);
+                        GameModeUtil.SetMode(args[0], (Player) sender);
                     } else {
-                        errorUtil.warningfromconfig(null, "castlefight.errors.only-player");
+                        ErrorUtil.warningfromconfig(null, "castlefight.errors.only-player");
                     }
                 }
                 break;
 
             default:
                 if (sender instanceof Player) {
-                    errorUtil.errorfromconfig((Player) sender, "castlefight.errors.invalid-args");
+                    ErrorUtil.errorfromconfig((Player) sender, "castlefight.errors.invalid-args");
                 } else {
-                    errorUtil.errorfromconfig(null, "castlefight.errors.invalid-args");
+                    ErrorUtil.errorfromconfig(null, "castlefight.errors.invalid-args");
                 }
         }
         return true;

@@ -146,7 +146,7 @@ public class PlayerInfo {
 
     public void setGameID (String playerName, int ID) throws IOException {
         FileConfiguration playerInfo = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
-        playerInfo.set("gameID", gameID);
+        playerInfo.set("gameID", ID);
         playerInfo.save(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml"));
     }
 

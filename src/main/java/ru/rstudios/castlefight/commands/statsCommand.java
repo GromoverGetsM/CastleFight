@@ -7,6 +7,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.rstudios.castlefight.utils.MessagesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +21,10 @@ public class statsCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) sender;
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("rating") || args[0].equalsIgnoreCase("money")) {
-                    sender.sendMessage(messagesUtil.messageString("castlefight.commands.stats."+args[0].toLowerCase()), player.getName());
+                    sender.sendMessage(MessagesUtil.messageString("castlefight.commands.stats."+args[0].toLowerCase()), player.getName());
                 }
             } else {
-                player.sendMessage(messagesUtil.messageString("castlefight.commands.stats.usage"));
+                player.sendMessage(MessagesUtil.messageString("castlefight.commands.stats.usage"));
             }
         }
         return true;

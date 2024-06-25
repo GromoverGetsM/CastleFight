@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import ru.rstudios.castlefight.modules.ClickActions;
 import ru.rstudios.castlefight.modules.GameInfo;
 import ru.rstudios.castlefight.modules.PlayerInfo;
+import ru.rstudios.castlefight.utils.ErrorUtil;
 
 import java.io.IOException;
 
@@ -51,7 +52,7 @@ public class ClickActionsHandlerTask implements Runnable {
                         try {
                             gameInfo.setPlayerActiveRole(playerName, executableParts);
                         } catch (IOException e) {
-                            errorUtil.error(null, e.getLocalizedMessage());
+                            ErrorUtil.error(null, e.getLocalizedMessage());
                         }
                     }
                     break;
@@ -60,7 +61,7 @@ public class ClickActionsHandlerTask implements Runnable {
                         try {
                             gameInfo.setPlayerTeam(playerName, executableParts);
                         } catch (IOException e) {
-                            errorUtil.error(null, e.getLocalizedMessage());
+                            ErrorUtil.error(null, e.getLocalizedMessage());
                         }
                     }
                     break;
@@ -68,84 +69,84 @@ public class ClickActionsHandlerTask implements Runnable {
                     try {
                         playerInfo.setMoney(playerName, playerInfo.getMoney() + Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case TAKE_MONEY:
                     try {
                         playerInfo.setMoney(playerName, playerInfo.getMoney() - Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case SET_MONEY:
                     try {
                         playerInfo.setMoney(playerName, Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case ADD_GAME_MONEY:
                     try {
                         gameInfo.setPlayerBalance(playerName, gameInfo.getPlayerBalance(playerName) + Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case TAKE_GAME_MONEY:
                     try {
                         gameInfo.setPlayerBalance(playerName, gameInfo.getPlayerBalance(playerName) - Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case SET_GAME_MONEY:
                     try {
                         gameInfo.setPlayerBalance(playerName, Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case ADD_INCOME:
                     try {
                         gameInfo.setPlayerIncome(playerName, gameInfo.getPlayerIncome(playerName) + Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case TAKE_INCOME:
                     try {
                         gameInfo.setPlayerIncome(playerName, gameInfo.getPlayerIncome(playerName) - Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case SET_INCOME:
                     try {
                         gameInfo.setPlayerIncome(playerName, Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case ADD_TOWERS_LIMIT:
                     try {
                         gameInfo.setPlayerTowerLimit(playerName, gameInfo.getPlayerTowerLimit(playerName) + Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case TAKE_TOWERS_LIMIT:
                     try {
                         gameInfo.setPlayerTowerLimit(playerName, gameInfo.getPlayerTowerLimit(playerName) - Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
                 case SET_TOWERS_LIMIT:
                     try {
                         gameInfo.setPlayerTowerLimit(playerName, Integer.parseInt(executableParts));
                     } catch (IOException e) {
-                        errorUtil.error(null, e.getLocalizedMessage());
+                        ErrorUtil.error(null, e.getLocalizedMessage());
                     }
                     break;
             }

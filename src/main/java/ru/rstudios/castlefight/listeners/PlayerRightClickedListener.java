@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.rstudios.castlefight.modules.GameInfo;
 import ru.rstudios.castlefight.modules.PlayerInfo;
 import ru.rstudios.castlefight.tasks.UnitSpawner;
+import ru.rstudios.castlefight.utils.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,12 +35,12 @@ public class PlayerRightClickedListener implements Listener {
         if (event.getAction().isRightClick()) {
             Player player = event.getPlayer();
             if (player.getInventory().getItemInMainHand().getType().getKey() == Material.GOLDEN_AXE.getKey()) {
-                FileConfiguration data = dataUtil.loadPlayerData(player.getName());
+                FileConfiguration data = DataUtil.loadPlayerData(player.getName());
                 int gameID = data.getInt("gameID");
                 if (gameID != -1) {
                     GameInfo gameInfo = new GameInfo(gameID);
 
-                    Inventory towerList = inventoryUtil.inventoryFromConfig("towers_" + gameInfo.getPlayerActiveRole(player.getName()), player);
+                    Inventory towerList = InventoryUtil.inventoryFromConfig("towers_" + gameInfo.getPlayerActiveRole(player.getName()), player);
                     player.openInventory(towerList);
                 }
             }
@@ -50,7 +51,7 @@ public class PlayerRightClickedListener implements Listener {
 
             Block block = event.getClickedBlock();
             if (block.getType() != Material.AIR && player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_AXE) {
-                String result = relativeStructureUtil.findTower(block.getType().name(), block.getLocation());
+                String result = RelativeStructureUtil.findTower(block.getType().name(), block.getLocation());
 
                 if (result != null) {
                     String[] parts = result.split("\\|");
@@ -71,7 +72,7 @@ public class PlayerRightClickedListener implements Listener {
                         if (levelFile.exists()) {
                             List<Map<?, ?>> structureConfig = YamlConfiguration.loadConfiguration(levelFile).getMapList("StructureConfig");
                             if (!structureConfig.isEmpty()) {
-                                int[] coords = relativeStructureUtil.findTowerCoordinates(LBLoc, role, tower, level);
+                                int[] coords = RelativeStructureUtil.findTowerCoordinates(LBLoc, role, tower, level);
                                 Location leftBottom = new Location(player.getWorld(), coords[0], coords[1], coords[2]);
                                 Location rightTop = new Location(player.getWorld(), coords[3], coords[4], coords[5]);
 
@@ -87,45 +88,45 @@ public class PlayerRightClickedListener implements Listener {
                                 List<MetadataValue> holoName = leftBottom.getBlock().getMetadata("holoName");
                                 List<MetadataValue> taskIDlist = leftBottom.getBlock().getMetadata("taskID");
                                 if (!holoName.isEmpty() && !taskIDlist.isEmpty()) {
-                                    holoUtil.deleteHolo(player.getWorld(), holoName.get(0).asString());
+                                    HoloUtil.deleteHolo(player.getWorld(), holoName.get(0).asString());
 
                                     Bukkit.getScheduler().cancelTask(taskIDlist.get(0).asInt());
 
-                                    towerUtil.loadStructure(role, tower, possibleLevel, leftBottom).thenAccept(successfulLoad -> {
+                                    TowerUtil.loadStructure(role, tower, possibleLevel, leftBottom).thenAccept(successfulLoad -> {
                                         if (successfulLoad) {
                                             Random random = new Random();
                                             int id = random.nextInt(1, 1000000);
                                             leftBottom.getBlock().setMetadata("owner", new FixedMetadataValue(plugin, player.getName()));
                                             leftBottom.getBlock().setMetadata("holoName", new FixedMetadataValue(plugin, player.getName()+"_"+tower+"_"+possibleLevel+"_"+id));
 
-                                            holoUtil.createHologram(leftBottom.clone().add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
-                                            holoUtil.addHoloLine(leftBottom.getWorld(), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, "§b██████████", 2);
+                                            HoloUtil.createHologram(leftBottom.clone().add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
+                                            HoloUtil.addHoloLine(leftBottom.getWorld(), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, "§b██████████", 2);
 
-                                            HashMap<String, Object> unitData = roleUtil.getRoleUnitData(role, tower, level);
+                                            HashMap<String, Object> unitData = RoleUtil.getRoleUnitData(role, tower, level);
                                             int taskID = Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(leftBottom.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), leftBottom), 0, 1).getTaskId();
                                             PlayerInfo playerInfo = new PlayerInfo(player.getName());
                                             try {
                                                 playerInfo.addTaskId(player.getName(), taskID);
                                                 leftBottom.getBlock().setMetadata("taskID", new FixedMetadataValue(plugin, taskID));
                                             } catch (IOException e) {
-                                                errorUtil.error(null, e.getLocalizedMessage());
+                                                ErrorUtil.error(null, e.getLocalizedMessage());
                                             }
                                         }
                                     });
                                 }
                             } else {
-                                errorUtil.errorfromconfig(player, "castlefight.errors.tower-not-found");
+                                ErrorUtil.errorfromconfig(player, "castlefight.errors.tower-not-found");
                             }
                         } else {
-                            Inventory upgradeInventory = inventoryUtil.inventoryFromConfig(role + "_" + tower + "_" + level, player);
+                            Inventory upgradeInventory = InventoryUtil.inventoryFromConfig(role + "_" + tower + "_" + level, player);
                             player.openInventory(upgradeInventory);
                         }
                     } else {
-                        Inventory upgradeInventory = inventoryUtil.inventoryFromConfig(role + "_" + tower + "_" + level, player);
+                        Inventory upgradeInventory = InventoryUtil.inventoryFromConfig(role + "_" + tower + "_" + level, player);
                         player.openInventory(upgradeInventory);
                     }
                 } else {
-                    errorUtil.errorfromconfig(player, "castlefight.errors.tower-not-defined");
+                    ErrorUtil.errorfromconfig(player, "castlefight.errors.tower-not-defined");
                 }
             }
         }

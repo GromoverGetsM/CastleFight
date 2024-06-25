@@ -18,19 +18,19 @@ import static ru.rstudios.castlefight.CastleFight.*;
 
 public class ScoreBoardUtil {
 
-    private final ScoreboardManager manager = Bukkit.getScoreboardManager();
-    public final Map<String, Scoreboard> scoreboards = new HashMap<>();
+    private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
+    public static final Map<String, Scoreboard> scoreboards = new HashMap<>();
 
-    public void createScoreboard (String name, String displayName) {
+    public static void createScoreboard (String name, String displayName) {
         Scoreboard board = manager.getNewScoreboard();
         Objective objective = board.registerNewObjective(name, "dummy", ChatColor.translateAlternateColorCodes('&', displayName));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         scoreboards.put(name, board);
     }
 
-    public void createConfigScoreboard (String name, String configName, String playerName) {
-        FileConfiguration messages = fileUtil.loadFile("messages.yml");
-        String title = messagesUtil.messageString("castlefight.scoreboards." + configName + ".title");
+    public static void createConfigScoreboard (String name, String configName, String playerName) {
+        FileConfiguration messages = FileUtil.loadFile("messages.yml");
+        String title = MessagesUtil.messageString("castlefight.scoreboards." + configName + ".title");
         List<String> scoreLines = messages.getStringList("castlefight.scoreboards." + configName + ".lines");
 
         Scoreboard board = manager.getNewScoreboard();
@@ -40,26 +40,26 @@ public class ScoreBoardUtil {
         loadScoreboard(scoreLines, name, playerName);
     }
 
-    public void deleteScoreboard(String name, String playerName) {
+    public static void deleteScoreboard(String name, String playerName) {
         hideScoreboard(name, playerName);
         scoreboards.remove(name);
     }
 
-    public void showScoreboard(String name, String playerName) {
+    public static void showScoreboard(String name, String playerName) {
         Player player = Bukkit.getPlayer(playerName);
         if (player != null && scoreboards.containsKey(name)) {
             player.setScoreboard(scoreboards.get(name));
         }
     }
 
-    public void hideScoreboard(String name, String playerName) {
+    public static void hideScoreboard(String name, String playerName) {
         Player player = Bukkit.getPlayer(playerName);
         if (player != null && scoreboards.containsKey(name)) {
             player.setScoreboard(manager.getNewScoreboard());
         }
     }
 
-    public void setScore(String scoreboardName, String text, int score) {
+    public static void setScore(String scoreboardName, String text, int score) {
         if (scoreboards.containsKey(scoreboardName)) {
             Scoreboard board = scoreboards.get(scoreboardName);
             Objective objective = board.getObjective(scoreboardName);
@@ -72,7 +72,7 @@ public class ScoreBoardUtil {
     }
 
 
-    public void removeScore(String scoreboardName, int score) {
+    public static void removeScore(String scoreboardName, int score) {
         if (scoreboards.containsKey(scoreboardName)) {
             Scoreboard board = scoreboards.get(scoreboardName);
             Objective objective = board.getObjective(scoreboardName);
@@ -87,7 +87,7 @@ public class ScoreBoardUtil {
         }
     }
 
-    public void loadScoreboard(List<String> lines, String scoreboardName, String playerName) {
+    public static void loadScoreboard(List<String> lines, String scoreboardName, String playerName) {
         if (scoreboards.containsKey(scoreboardName)) {
             Scoreboard board = scoreboards.get(scoreboardName);
             Objective objective = board.getObjective(scoreboardName);
@@ -98,7 +98,7 @@ public class ScoreBoardUtil {
 
                 int score = 99;
                 for (String line : lines) {
-                    String parsedLine = ChatColor.translateAlternateColorCodes('&', placeholderUtil.replacePlaceholders(playerName, line));
+                    String parsedLine = ChatColor.translateAlternateColorCodes('&', PlaceholderUtil.replacePlaceholders(playerName, line));
                     Score scoreLine = objective.getScore(parsedLine);
                     scoreLine.setScore(score);
                     score--;

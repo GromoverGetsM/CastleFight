@@ -4,10 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.rstudios.castlefight.commands.*;
-import ru.rstudios.castlefight.listeners.EntityDamageListener;
-import ru.rstudios.castlefight.listeners.PlayerJoinedServerListener;
-import ru.rstudios.castlefight.listeners.PlayerRightClickedListener;
-import ru.rstudios.castlefight.listeners.clickInventoryItem;
+import ru.rstudios.castlefight.listeners.*;
 import ru.rstudios.castlefight.tasks.ParticleTask;
 import ru.rstudios.castlefight.tasks.TabPlayersShowTask;
 import ru.rstudios.castlefight.utils.*;
@@ -19,69 +16,28 @@ import java.util.Objects;
 public final class CastleFight extends JavaPlugin {
 
     public static JavaPlugin plugin;
-    public static BossBarUtil bossBarUtil;
-    public static CountDamageUtil countDamageUtil;
-    public static DataUtil dataUtil;
-    public static ErrorUtil errorUtil;
-    public static FileUtil fileUtil;
-    public static GameModeUtil gameModeUtil;
-    public static HoloUtil holoUtil;
-    public static InventoryUtil inventoryUtil;
-    public static ItemUtil itemUtil;
-    public static MessagesUtil messagesUtil;
-    public static ParticleUtil particleUtil;
-    public static PlaceholderUtil placeholderUtil;
-    public static RelativeStructureUtil relativeStructureUtil;
-    public static RoleUtil roleUtil;
-    public static ScoreBoardUtil scoreBoardUtil;
-    public static TowerUtil towerUtil;
-    public static UnitCreator unitCreator;
-    public static WorldCreator worldCreator;
 
-    public static ParticleTask particleTask;
-    public static TabPlayersShowTask tabPlayersShowTask;
 
     @Override
     public void onEnable() {
 
         getLogger().info("CastleFight загружает необходимые утилиты...");
         plugin = this;
-        bossBarUtil = new BossBarUtil();
-        countDamageUtil = new CountDamageUtil();
-        dataUtil = new DataUtil();
-        errorUtil = new ErrorUtil();
-        fileUtil = new FileUtil();
-        gameModeUtil = new GameModeUtil();
-        holoUtil = new HoloUtil();
-        inventoryUtil = new InventoryUtil();
-        itemUtil = new ItemUtil();
-        messagesUtil = new MessagesUtil();
-        particleUtil = new ParticleUtil();
-        placeholderUtil = new PlaceholderUtil();
-        relativeStructureUtil = new RelativeStructureUtil();
-        roleUtil = new RoleUtil();
-        scoreBoardUtil = new ScoreBoardUtil();
-        towerUtil = new TowerUtil();
-        unitCreator = new UnitCreator();
-        worldCreator = new WorldCreator();
 
-        particleTask = new ParticleTask();
-        tabPlayersShowTask = new TabPlayersShowTask();
-
-        Bukkit.getScheduler().runTaskTimer(this, particleTask, 0L, 5L);
-        Bukkit.getScheduler().runTaskTimer(this, tabPlayersShowTask, 0L, 20L);
+        Bukkit.getScheduler().runTaskTimer(this, new ParticleTask(), 0L, 5L);
+        Bukkit.getScheduler().runTaskTimer(this, new TabPlayersShowTask(), 0L, 20L);
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
-        fileUtil.saveUnusualConfig("messages.yml", fileUtil.loadFile("messages.yml").getString("messages-version") == null || !messagesUtil.messageString("messages-version").equalsIgnoreCase("1.5"));
-        fileUtil.saveUnusualConfig("playersDataTemplate.yml", !new File(plugin.getDataFolder(), "playersDataTemplate.yml").exists());
-        fileUtil.createStarterFolder("data");
-        fileUtil.createStarterFolder("roles");
-        fileUtil.createStarterFolder("maps");
+        FileUtil.saveUnusualConfig("messages.yml", FileUtil.loadFile("messages.yml").getString("messages-version") == null || !MessagesUtil.messageString("messages-version").equalsIgnoreCase("1.5"));
+        FileUtil.saveUnusualConfig("playersDataTemplate.yml", !new File(plugin.getDataFolder(), "playersDataTemplate.yml").exists());
+        FileUtil.createStarterFolder("data");
+        FileUtil.createStarterFolder("roles");
+        FileUtil.createStarterFolder("maps");
         try {
-            fileUtil.createNewFile(plugin.getDataFolder(), "activeGames.yml");
+            FileUtil.createNewFile(plugin.getDataFolder(), "activeGames.yml");
         } catch (IOException e) {
-            errorUtil.criterror(null, e.getLocalizedMessage());
+            ErrorUtil.criterror(null, e.getLocalizedMessage());
         }
         getLogger().info("Файлы загружены.");
 
@@ -108,19 +64,20 @@ public final class CastleFight extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinedServerListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerRightClickedListener(), this);
         getServer().getPluginManager().registerEvents(new clickInventoryItem(), this);
+        getServer().getPluginManager().registerEvents(new PlayerLeft(), this);
         getLogger().info("Слушатели загружены.");
 
         getLogger().info("CastleFight загружает стартовую расу...");
-        roleUtil.loadElfsRole();
+        RoleUtil.loadElfsRole();
         getLogger().info("Раса загружена.");
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (!new File(new File(plugin.getDataFolder(), "data"), player.getName() + ".yml").exists()) {
                 try {
-                    fileUtil.createNewFile("data", player.getName() + ".yml");
-                    dataUtil.savePlayersDataTemplate(player.getName(), "data");
+                    FileUtil.createNewFile("data", player.getName() + ".yml");
+                    DataUtil.savePlayersDataTemplate(player.getName(), "data");
                 } catch (IOException e) {
-                    errorUtil.criterrorfromconfig(player, "castlefight.errors.cannot-create-file");
+                    ErrorUtil.criterrorfromconfig(player, "castlefight.errors.cannot-create-file");
                 }
             }
         }

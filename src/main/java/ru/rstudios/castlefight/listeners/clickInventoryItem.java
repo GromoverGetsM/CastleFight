@@ -15,6 +15,7 @@ import ru.rstudios.castlefight.modules.ClickActions;
 import ru.rstudios.castlefight.modules.PlayerInfo;
 import ru.rstudios.castlefight.tasks.ClickActionsHandlerTask;
 import ru.rstudios.castlefight.tasks.UnitSpawner;
+import ru.rstudios.castlefight.utils.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,19 +30,19 @@ public class clickInventoryItem implements Listener {
 
     @EventHandler
     public void onPlayerClickedInventory (InventoryClickEvent event) {
-        FileConfiguration messages = fileUtil.loadFile("messages.yml");
+        FileConfiguration messages = FileUtil.loadFile("messages.yml");
         Map<String, Object> menus = messages.getConfigurationSection("castlefight.menus").getValues(false);
         if (!menus.isEmpty()) {
             for (String key : menus.keySet()) {
-                String inventoryName = messagesUtil.messageString("castlefight.menus." + key + ".title");
+                String inventoryName = MessagesUtil.messageString("castlefight.menus." + key + ".title");
                 if (event.getView().getTitle().equalsIgnoreCase(inventoryName)) {
                     event.setCancelled(true);
                 }
 
-                Map<String, Object> items = fileUtil.loadFile("messages.yml").getConfigurationSection("castlefight.menus." + key + ".items").getValues(false);
+                Map<String, Object> items = FileUtil.loadFile("messages.yml").getConfigurationSection("castlefight.menus." + key + ".items").getValues(false);
                 if (!items.isEmpty()) {
                     for (String key2 : items.keySet()) {
-                        if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null && event.getCurrentItem().getItemMeta().getDisplayName().equals(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".name"))) {
+                        if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null && event.getCurrentItem().getItemMeta().getDisplayName().equals(MessagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".name"))) {
                             List<String> clickActions = messages.getStringList("castlefight.menus." + key + ".items." + ".onClick");
                             if (!clickActions.isEmpty()) {
                                 for (String actions : clickActions) {
@@ -54,9 +55,9 @@ public class clickInventoryItem implements Listener {
 
                             if (messages.getString("castlefight.menus." + key + ".items." + key2 + ".role") != null && messages.getString("castlefight.menus." + key + ".items." + key2 + ".tower") != null && messages.getString("castlefight.menus." + key + ".items." + key2 + ".level") != null) {
                                 if (!event.getWhoClicked().getWorld().getName().equals("world")) {
-                                    String role = messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".role");
-                                    String tower = messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".tower");
-                                    int level = Integer.parseInt(messagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".level"));
+                                    String role = MessagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".role");
+                                    String tower = MessagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".tower");
+                                    int level = Integer.parseInt(MessagesUtil.messageString("castlefight.menus." + key + ".items." + key2 + ".level"));
 
                                     Player player = (Player) event.getWhoClicked();
                                     if (player.getTargetBlockExact(5).getType() != Material.AIR) {
@@ -81,7 +82,7 @@ public class clickInventoryItem implements Listener {
                                         if (!hasObstruction) {
                                             viewLoc.add(-1, 1, -1);
                                             player.closeInventory();
-                                            towerUtil.loadStructure(role, tower, level, viewLoc).thenAccept(successfulLoad -> {
+                                            TowerUtil.loadStructure(role, tower, level, viewLoc).thenAccept(successfulLoad -> {
                                                 if (successfulLoad) {
                                                     File mainFolder = new File(plugin.getDataFolder(), "roles");
                                                     File roleFolder = new File(mainFolder, role);
@@ -94,28 +95,28 @@ public class clickInventoryItem implements Listener {
                                                     viewLoc.getBlock().setMetadata("id", new FixedMetadataValue(plugin, id));
                                                     viewLoc.getBlock().setMetadata("holoName", new FixedMetadataValue(plugin, player.getName()+"_"+tower+"_"+level+"_"+id));
 
-                                                    holoUtil.createHologram(viewLoc.clone().add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+level+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
-                                                    holoUtil.addHoloLine(viewLoc.getWorld(), player.getName()+"_"+tower+"_"+level+"_"+id, "§b██████████", 2);
+                                                    HoloUtil.createHologram(viewLoc.clone().add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+level+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
+                                                    HoloUtil.addHoloLine(viewLoc.getWorld(), player.getName()+"_"+tower+"_"+level+"_"+id, "§b██████████", 2);
 
-                                                    HashMap<String, Object> unitData = roleUtil.getRoleUnitData(role, tower, level);
+                                                    HashMap<String, Object> unitData = RoleUtil.getRoleUnitData(role, tower, level);
                                                     int taskID = Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(viewLoc.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), viewLoc), 0, 1).getTaskId();
                                                     PlayerInfo playerInfo = new PlayerInfo(player.getName());
                                                     try {
                                                         playerInfo.addTaskId(player.getName(), taskID);
                                                         viewLoc.getBlock().setMetadata("taskID", new FixedMetadataValue(plugin, taskID));
                                                     } catch (IOException e) {
-                                                        errorUtil.error(null, e.getLocalizedMessage());
+                                                        ErrorUtil.error(null, e.getLocalizedMessage());
                                                     }
                                                 }
                                             });
                                         } else {
                                             player.closeInventory();
-                                            player.sendMessage(messagesUtil.messageString("castlefight.errors.cannot-place-tower"));
+                                            player.sendMessage(MessagesUtil.messageString("castlefight.errors.cannot-place-tower"));
                                         }
                                     }
                                 } else {
                                     event.getWhoClicked().closeInventory();
-                                    event.getWhoClicked().sendMessage(messagesUtil.messageString("castlefight.errors.cannot-place-tower"));
+                                    event.getWhoClicked().sendMessage(MessagesUtil.messageString("castlefight.errors.cannot-place-tower"));
                                 }
                             }
                         }

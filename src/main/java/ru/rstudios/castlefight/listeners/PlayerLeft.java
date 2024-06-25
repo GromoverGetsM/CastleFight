@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ru.rstudios.castlefight.modules.PlayerInfo;
+import ru.rstudios.castlefight.utils.ScoreBoardUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +32,7 @@ public class PlayerLeft implements Listener {
             }
 
             playerInfo.setTasks(player.getName(), tasks);
-            scoreBoardUtil.deleteScoreboard(player.getName() + "_" + playerInfo.getGameID(), player.getName());
+            ScoreBoardUtil.deleteScoreboard(player.getName() + "_" + playerInfo.getGameID(), player.getName());
         }
     }
 }

@@ -10,28 +10,28 @@ import static ru.rstudios.castlefight.CastleFight.*;
 
 public class FileUtil {
 
-    public void createNewFile (String folder, String name) throws IOException {
+    public static void createNewFile (String folder, String name) throws IOException {
         File uFile = new File(plugin.getDataFolder(), folder);
         if (!uFile.exists() || !uFile.isDirectory()) {
             if (!uFile.mkdirs()) {
-                errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-folder");
+                ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-folder");
             }
         }
 
         File file = new File(uFile, name);
         if (!file.exists() || !file.isFile()) {
             if (!file.createNewFile()) {
-                errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-file");
+                ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-file");
             }
         }
     }
 
-    public void createNewFile (File folder, String name) throws IOException {
+    public static void createNewFile (File folder, String name) throws IOException {
         if (folder.exists() && folder.isDirectory()) {
             File file = new File(folder, name);
             if (!file.exists() || !file.isFile()) {
                 if (!file.createNewFile()) {
-                    errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-file");
+                    ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-file");
                 }
             }
         } else {
@@ -39,29 +39,29 @@ public class FileUtil {
                 File file = new File(folder, name);
                 if (!file.exists() || !file.isFile()) {
                     if (!file.createNewFile()) {
-                        errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-file");
+                        ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-file");
                     }
                 }
             } else {
-                errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-folder");
+                ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-folder");
             }
         }
     }
 
-    public void createStarterFolder (String folderName) {
+    public static void createStarterFolder (String folderName) {
         File folder = new File(plugin.getDataFolder(), folderName);
         if (!folder.exists()) {
             folder.mkdirs();
         }
     }
 
-    public boolean copyFilesTo (File from, File to) {
+    public static void copyFilesTo (File from, File to) {
         try {
             File[] toCopy = from.listFiles();
 
             if (!to.exists() && !to.mkdirs()) {
-                errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-folder");
-                return false;
+                ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-folder");
+                return;
             }
 
             if (toCopy != null) {
@@ -75,37 +75,35 @@ public class FileUtil {
                 }
             }
 
-            return true;
         } catch (IOException e) {
-            errorUtil.criterror(null, e.getLocalizedMessage());
-            return false;
+            ErrorUtil.criterror(null, e.getLocalizedMessage());
         }
     }
-    public FileConfiguration loadFile (String fileName) {
+    public static FileConfiguration loadFile (String fileName) {
         return YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), fileName));
     }
 
-    public FileConfiguration loadUnusualFolderFile (String fileName, String folder) {
+    public static FileConfiguration loadUnusualFolderFile (String fileName, String folder) {
         File uFolder = new File(plugin.getDataFolder(), folder);
         if (uFolder.exists() && !uFolder.isFile()) {
             return YamlConfiguration.loadConfiguration(new File(uFolder, fileName));
         } else {
-            errorUtil.criterrorfromconfig(null, "castlefight.errors.folder-not-found");
+            ErrorUtil.criterrorfromconfig(null, "castlefight.errors.folder-not-found");
             return null;
         }
     }
 
-    public void save (String fileName) throws IOException {
-        fileUtil.loadFile(fileName).save(new File(plugin.getDataFolder(), fileName));
+    public static void save (String fileName) throws IOException {
+        FileUtil.loadFile(fileName).save(new File(plugin.getDataFolder(), fileName));
     }
 
-    public void saveUnusualConfig (String fileName, boolean needsToReplace) {
+    public static void saveUnusualConfig (String fileName, boolean needsToReplace) {
         plugin.saveResource(fileName, needsToReplace);
     }
 
-    public boolean deleteWorld(File path) {
+    public static boolean deleteWorld(File path) {
         if (path.exists()) {
-            File files[] = path.listFiles();
+            File[] files = path.listFiles();
             for (File file : files) {
                 if (file.isDirectory()) {
                     deleteWorld(file);
@@ -115,6 +113,6 @@ public class FileUtil {
             }
         }
 
-        return(path.delete());
+        return (path.delete());
     }
 }

@@ -12,11 +12,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import ru.rstudios.castlefight.utils.MessagesUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.rstudios.castlefight.CastleFight.messagesUtil;
 import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class EntityDamageListener implements Listener {
@@ -47,7 +47,7 @@ public class EntityDamageListener implements Listener {
 
         if (damager != null) {
             if (damager instanceof Player) {
-                ((Player) damager).sendActionBar(messagesUtil.messageString("castlefight.income.unitkilledenemy"));
+                ((Player) damager).sendActionBar(MessagesUtil.messageString("castlefight.income.unitkilledenemy"));
             } else {
                 if (!damager.getPersistentDataContainer().isEmpty()) {
                     NamespacedKey unitOwner = new NamespacedKey(plugin, "Owner");
@@ -55,7 +55,7 @@ public class EntityDamageListener implements Listener {
                     String owner = container.get(unitOwner, PersistentDataType.STRING);
                     if (owner != null && !owner.equalsIgnoreCase("none") && Bukkit.getPlayer(owner).isOnline() && Bukkit.getPlayer(owner).getWorld() == damager.getWorld()) {
                         Player player = Bukkit.getPlayer(owner);
-                        player.sendActionBar(messagesUtil.messageString("castlefight.income.unitkilledenemy"));
+                        player.sendActionBar(MessagesUtil.messageString("castlefight.income.unitkilledenemy"));
                     }
                 }
             }

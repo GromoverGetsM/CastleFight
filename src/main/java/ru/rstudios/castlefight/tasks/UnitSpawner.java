@@ -3,12 +3,11 @@ package ru.rstudios.castlefight.tasks;
 import org.bukkit.Location;
 import org.bukkit.metadata.MetadataValue;
 import ru.rstudios.castlefight.modules.GameInfo;
+import ru.rstudios.castlefight.utils.HoloUtil;
+import ru.rstudios.castlefight.utils.UnitCreator;
 
 import java.util.List;
 import java.util.Locale;
-
-import static ru.rstudios.castlefight.CastleFight.holoUtil;
-import static ru.rstudios.castlefight.CastleFight.unitCreator;
 
 public class UnitSpawner implements Runnable {
 
@@ -59,7 +58,7 @@ public class UnitSpawner implements Runnable {
 
         List<MetadataValue> holoName = structureLeftBottom.getBlock().getMetadata("holoName");
         if (!holoName.isEmpty()) {
-            holoUtil.setHoloLine(structureLeftBottom.getWorld(), holoName.get(0).asString(), progressBar.toString(), 2);
+            HoloUtil.setHoloLine(structureLeftBottom.getWorld(), holoName.get(0).asString(), progressBar.toString(), 2);
         }
     }
 
@@ -75,6 +74,6 @@ public class UnitSpawner implements Runnable {
             enemyBase = gameInfo.getRedBase();
         }
 
-        unitCreator.createUnit(unitOwner, role, tower, level, gameInfo.getPlayerTeam(unitOwner), enemyBase, spawnLocation);
+        UnitCreator.createUnit(unitOwner, role, tower, level, gameInfo.getPlayerTeam(unitOwner), enemyBase, spawnLocation);
     }
 }

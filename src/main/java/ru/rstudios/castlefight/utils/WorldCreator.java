@@ -16,14 +16,11 @@ import java.util.Random;
 import static ru.rstudios.castlefight.CastleFight.*;
 
 public class WorldCreator {
-    public int createGameWorld (int players) throws IOException {
+    public static int createGameWorld (int players) throws IOException {
         Random random = new Random();
         int ID;
 
-        FileConfiguration games = fileUtil.loadFile("activeGames.yml");
-        if (games == null) {
-            return -1;
-        }
+        FileConfiguration games = FileUtil.loadFile("activeGames.yml");
 
         do {
             ID = random.nextInt(1, 1000000);
@@ -46,7 +43,7 @@ public class WorldCreator {
 
                 File world = matchingFolders.get(random.nextInt(matchingFolders.size()));
                 File mainWorldFile = new File(Bukkit.getServer().getWorldContainer() + File.separator + ID + File.separator);
-                fileUtil.copyFilesTo(world, mainWorldFile);
+                FileUtil.copyFilesTo(world, mainWorldFile);
                 games.set(String.valueOf(ID), "active");
                 games.save(new File(plugin.getDataFolder(), "activeGames.yml"));
                 Bukkit.createWorld(new org.bukkit.WorldCreator(String.valueOf(ID)));
@@ -61,15 +58,14 @@ public class WorldCreator {
         return ID;
     }
 
-    public boolean deleteGameWorld (int ID) throws IOException {
+    public static void deleteGameWorld (int ID) throws IOException {
         World world = Bukkit.getWorld(String.valueOf(ID));
         if (world != null) {
-            File worldFile = new File(Bukkit.getServer().getWorldContainer() + File.separator + ID + File.separator);
-            bossBarUtil.deleteBossbar(ID + "_redTeam");
-            bossBarUtil.deleteBossbar(ID + "_blueTeam");
+            BossBarUtil.deleteBossbar(ID + "_redTeam");
+            BossBarUtil.deleteBossbar(ID + "_blueTeam");
 
             for (Player player : world.getPlayers()) {
-                player.sendMessage(messagesUtil.messageString("castlefight.main.game-ended"));
+                player.sendMessage(MessagesUtil.messageString("castlefight.main.game-ended"));
                 player.teleport(new Location(Bukkit.getWorld("world"), 0, 64, 0));
                 PlayerInfo playerInfo = new PlayerInfo(player.getName());
                 List<Integer> tasks = playerInfo.getTasksID();
@@ -83,19 +79,13 @@ public class WorldCreator {
                 }
 
                 playerInfo.setTasks(player.getName(), tasks);
-                scoreBoardUtil.deleteScoreboard(player.getName() + "_" + ID, player.getName());
+                ScoreBoardUtil.deleteScoreboard(player.getName() + "_" + ID, player.getName());
             }
 
             Bukkit.unloadWorld(world, false);
-            FileConfiguration games = fileUtil.loadFile("activeGames.yml");
-            if (games != null) {
-                games.set(String.valueOf(ID), null);
-                games.save(new File(plugin.getDataFolder(), "activeGames.yml"));
-            }
-
-            return fileUtil.deleteWorld(worldFile);
+            FileConfiguration games = FileUtil.loadFile("activeGames.yml");
+            games.set(String.valueOf(ID), null);
+            games.save(new File(plugin.getDataFolder(), "activeGames.yml"));
         }
-
-        return false;
     }
 }

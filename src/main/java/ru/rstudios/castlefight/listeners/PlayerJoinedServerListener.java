@@ -6,6 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import ru.rstudios.castlefight.utils.DataUtil;
+import ru.rstudios.castlefight.utils.FileUtil;
+import ru.rstudios.castlefight.utils.ItemUtil;
+import ru.rstudios.castlefight.utils.MessagesUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,11 +23,11 @@ public class PlayerJoinedServerListener implements Listener {
         String playerName = player.getName();
 
         if (!new File(new File(plugin.getDataFolder(), "data"), playerName + ".yml").exists()) {
-            fileUtil.createNewFile("data", playerName + ".yml");
-            dataUtil.savePlayersDataTemplate(playerName, "data");
+            FileUtil.createNewFile("data", playerName + ".yml");
+            DataUtil.savePlayersDataTemplate(playerName, "data");
         }
-        if (messagesUtil.messageString("castlefight.items.main_menu.give-on-join").equalsIgnoreCase("true") && fileUtil.loadFile("messages.yml").getString("castlefight.items.main_menu.slot") != null && fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot") >= 0 && fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot") <= 8) {
-            itemUtil.setItem(Material.BOOK, player, "main_menu",1, fileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot"));
+        if (MessagesUtil.messageString("castlefight.items.main_menu.give-on-join").equalsIgnoreCase("true") && FileUtil.loadFile("messages.yml").getString("castlefight.items.main_menu.slot") != null && FileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot") >= 0 && FileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot") <= 8) {
+            ItemUtil.setItem(Material.BOOK, player, "main_menu",1, FileUtil.loadFile("messages.yml").getInt("castlefight.items.main_menu.slot"));
         }
 
         YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "data" + File.separator + playerName + ".yml")).set("lastJoinTime", System.currentTimeMillis());

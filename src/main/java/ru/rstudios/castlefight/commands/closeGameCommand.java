@@ -7,6 +7,9 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.rstudios.castlefight.utils.ErrorUtil;
+import ru.rstudios.castlefight.utils.FileUtil;
+import ru.rstudios.castlefight.utils.WorldCreator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,9 +24,9 @@ public class closeGameCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (args.length == 1) {
             try {
-                worldCreator.deleteGameWorld(Integer.parseInt(args[0]));
+                WorldCreator.deleteGameWorld(Integer.parseInt(args[0]));
             } catch (IOException e) {
-                errorUtil.criterror(null, e.getLocalizedMessage());
+                ErrorUtil.criterror(null, e.getLocalizedMessage());
             }
         }
         return true;
@@ -33,7 +36,7 @@ public class closeGameCommand implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         List<String> pArgs = new ArrayList<>();
         if (args.length == 1) {
-            FileConfiguration games = fileUtil.loadFile("activeGames.yml");
+            FileConfiguration games = FileUtil.loadFile("activeGames.yml");
             Set<String> keys = games.getKeys(false);
 
             for (String key : keys) {

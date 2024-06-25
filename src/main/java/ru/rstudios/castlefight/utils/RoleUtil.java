@@ -13,12 +13,12 @@ import static ru.rstudios.castlefight.CastleFight.*;
 
 public class RoleUtil {
 
-    public void createRole(String roleName, Map<String, List<Map<String, Object>>> towersData) throws IOException {
+    public static void createRole(String roleName, Map<String, List<Map<String, Object>>> towersData) throws IOException {
         File folder = new File(new File(plugin.getDataFolder(), "roles"), roleName);
 
         if (!folder.exists()) {
             if (!folder.mkdirs()) {
-                errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
+                ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
                 return;
             }
         }
@@ -30,7 +30,7 @@ public class RoleUtil {
             File towerFolder = new File(folder, towerName);
             if (!towerFolder.exists()) {
                 if (!towerFolder.mkdirs()) {
-                    errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
+                    ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
                     return;
                 }
             }
@@ -39,7 +39,7 @@ public class RoleUtil {
                 File file = new File(towerFolder, i + ".yml");
                 if (!file.exists()) {
                     if (!file.createNewFile()) {
-                        errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
+                        ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
                         return;
                     }
                 }
@@ -56,7 +56,7 @@ public class RoleUtil {
         }
     }
 
-    public HashMap<String, Object> getRoleUnitData (String roleName, String towerName, int towerLevel) {
+    public static HashMap<String, Object> getRoleUnitData (String roleName, String towerName, int towerLevel) {
         File roleFolder = new File(new File(plugin.getDataFolder(), "roles"), roleName);
         if (roleFolder.exists()) {
             File towerFolder = new File(roleFolder, towerName);
@@ -79,20 +79,20 @@ public class RoleUtil {
 
                     return data;
                 } else {
-                    errorUtil.errorfromconfig(null, "role-not-found");
+                    ErrorUtil.errorfromconfig(null, "role-not-found");
                     return null;
                 }
             } else {
-                errorUtil.errorfromconfig(null, "role-not-found");
+                ErrorUtil.errorfromconfig(null, "role-not-found");
                 return null;
             }
         } else {
-            errorUtil.errorfromconfig(null, "role-not-found");
+            ErrorUtil.errorfromconfig(null, "role-not-found");
             return null;
         }
     }
 
-    public void loadElfsRole() {
+    public static void loadElfsRole() {
         Map<String, Object> spiderslairT1 = new HashMap<>();
         Map<String, Object> spiderslairT2 = new HashMap<>();
         Map<String, Object> spiderslairT3 = new HashMap<>();
@@ -157,9 +157,9 @@ public class RoleUtil {
 
 
         try {
-            roleUtil.createRole("elfs", elfsData);
+            RoleUtil.createRole("elfs", elfsData);
         } catch (IOException e) {
-            errorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
+            ErrorUtil.criterrorfromconfig(null, "castlefight.errors.cannot-create-role");
         }
     }
 }

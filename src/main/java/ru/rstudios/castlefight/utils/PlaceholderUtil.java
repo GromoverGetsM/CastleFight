@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PlaceholderUtil {
 
-    public String replacePlaceholders(String playerName, String text) {
+    public static String replacePlaceholders(String playerName, String text) {
         PlayerInfo playerInfo = new PlayerInfo(playerName);
         GameInfo gameInfo = null;
         List<String> placeholders = new ArrayList<>();
@@ -121,7 +121,7 @@ public class PlaceholderUtil {
         return text;
     }
 
-    public String replacePlaceholders(int gameID, String text) {
+    public static String replacePlaceholders(int gameID, String text) {
         GameInfo gameInfo = null;
         List<String> placeholders = new ArrayList<>();
 

@@ -8,9 +8,9 @@ import static ru.rstudios.castlefight.CastleFight.errorUtil;
 
 public class GameModeUtil implements Listener {
 
-    GameMode mode = null;
+    private static GameMode mode = null;
 
-    public void SetMode(String modeset, Player player) {
+    public static void SetMode(String modeset, Player player) {
         switch (modeset) {
             case "0", "s", "survival":
                 mode = GameMode.SURVIVAL;
@@ -25,7 +25,7 @@ public class GameModeUtil implements Listener {
                 mode = GameMode.SPECTATOR;
                 break;
             default:
-                errorUtil.warningfromconfig(player, "castlefight.errors.invalid-args");
+                ErrorUtil.warningfromconfig(player, "castlefight.errors.invalid-args");
                 break;
         }
         player.setGameMode(mode);
