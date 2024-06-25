@@ -90,7 +90,7 @@ public class FileUtil {
         if (uFolder.exists() && !uFolder.isFile()) {
             return YamlConfiguration.loadConfiguration(new File(uFolder, fileName));
         } else {
-            errorUtil.criterror(null, "Папка плагина " + uFolder + " не существует!");
+            errorUtil.criterrorfromconfig(null, "castlefight.errors.folder-not-found");
             return null;
         }
     }

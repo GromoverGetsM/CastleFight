@@ -102,6 +102,7 @@ public class clickInventoryItem implements Listener {
                                                     PlayerInfo playerInfo = new PlayerInfo(player.getName());
                                                     try {
                                                         playerInfo.addTaskId(player.getName(), taskID);
+                                                        viewLoc.getBlock().setMetadata("taskID", new FixedMetadataValue(plugin, taskID));
                                                     } catch (IOException e) {
                                                         errorUtil.error(null, e.getLocalizedMessage());
                                                     }

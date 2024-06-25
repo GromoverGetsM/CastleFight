@@ -20,16 +20,16 @@ public class DataUtil {
     }
     public void savePlayerData (String playerName, String folder) throws IOException {
         File uFile = new File(plugin.getDataFolder(), folder);
-        if (uFile.exists() && !uFile.isFile()) {
+        if (uFile.exists() && uFile.isDirectory()) {
             File dFile = new File(uFile, playerName + ".yml");
             if (dFile.exists() && dFile.isFile()) {
                 FileConfiguration data = loadPlayerData(playerName);
                 data.save(new File(new File(plugin.getDataFolder(), "data"), playerName+".yml"));
             } else {
-                errorUtil.error(null, "Файл сохранения не найден.");
+                errorUtil.errorfromconfig(null, "castlefight.errors.save-folder-not-found");
             }
         } else {
-            errorUtil.error(null, "Папка сохранения не найдена.");
+            errorUtil.errorfromconfig(null, "castlefight.errors.save-file-not-found");
         }
     }
 

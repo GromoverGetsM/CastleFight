@@ -2,6 +2,7 @@ package ru.rstudios.castlefight.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -13,16 +14,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.rstudios.castlefight.CastleFight.*;
+
 public class ScoreBoardUtil {
 
     private final ScoreboardManager manager = Bukkit.getScoreboardManager();
-    private final Map<String, Scoreboard> scoreboards = new HashMap<>();
+    public final Map<String, Scoreboard> scoreboards = new HashMap<>();
 
-    public void createScoreboard(String name, String displayName) {
+    public void createScoreboard (String name, String displayName) {
         Scoreboard board = manager.getNewScoreboard();
         Objective objective = board.registerNewObjective(name, "dummy", ChatColor.translateAlternateColorCodes('&', displayName));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         scoreboards.put(name, board);
+    }
+
+    public void createConfigScoreboard (String name, String configName, String playerName) {
+        FileConfiguration messages = fileUtil.loadFile("messages.yml");
+        String title = messagesUtil.messageString("castlefight.scoreboards." + configName + ".title");
+        List<String> scoreLines = messages.getStringList("castlefight.scoreboards." + configName + ".lines");
+
+        Scoreboard board = manager.getNewScoreboard();
+        Objective objective = board.registerNewObjective(name, "dummy", ChatColor.translateAlternateColorCodes('&', title));
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        scoreboards.put(name, board);
+        loadScoreboard(scoreLines, name, playerName);
     }
 
     public void deleteScoreboard(String name, String playerName) {
@@ -49,11 +64,13 @@ public class ScoreBoardUtil {
             Scoreboard board = scoreboards.get(scoreboardName);
             Objective objective = board.getObjective(scoreboardName);
             if (objective != null) {
+                board.resetScores(text);
                 Score scoreLine = objective.getScore(text);
                 scoreLine.setScore(score);
             }
         }
     }
+
 
     public void removeScore(String scoreboardName, int score) {
         if (scoreboards.containsKey(scoreboardName)) {
@@ -70,14 +87,19 @@ public class ScoreBoardUtil {
         }
     }
 
-    public void loadScoreboard(List<String> lines, String scoreboardName) {
+    public void loadScoreboard(List<String> lines, String scoreboardName, String playerName) {
         if (scoreboards.containsKey(scoreboardName)) {
             Scoreboard board = scoreboards.get(scoreboardName);
             Objective objective = board.getObjective(scoreboardName);
             if (objective != null) {
+                for (String entry : board.getEntries()) {
+                    board.resetScores(entry);
+                }
+
                 int score = 99;
                 for (String line : lines) {
-                    Score scoreLine = objective.getScore(ChatColor.translateAlternateColorCodes('&', line));
+                    String parsedLine = ChatColor.translateAlternateColorCodes('&', placeholderUtil.replacePlaceholders(playerName, line));
+                    Score scoreLine = objective.getScore(parsedLine);
                     scoreLine.setScore(score);
                     score--;
                     if (score < 0) break;
@@ -85,4 +107,5 @@ public class ScoreBoardUtil {
             }
         }
     }
+
 }

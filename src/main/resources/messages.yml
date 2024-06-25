@@ -94,7 +94,7 @@
 #
 # !! Плейсхолдеры сообщений %role%, %tower%, %level%, %error%, %message% не будут заменены вне своих сообщений
 
-messages-version: 1.4
+messages-version: 1.5
 
 castlefight:
   main:
@@ -118,6 +118,9 @@ castlefight:
     tower-not-defined: "&cБашня не определена."
     unknown-unit-data: "&cВведённые данные не совпадают ни с одним из возможных вариантов. Создание юнита отменено."
     placeholder-not-found: "&cПлейсхолдер не найден."
+    save-folder-not-found: "&cПапка сохранения не найдена."
+    save-file-not-found: "&cФайл сохранения не найден."
+    folder-not-found: "&cПапка не найдена."
 
   commands:
     gamemode:
@@ -144,7 +147,7 @@ castlefight:
 
     creategame:
       preparing: "&dCastleFight &8» &fПодготавливаю игру, пожалуйста подождите..."
-      created: "&dCastleFight &8» &fСоздана игра &e#%id%"
+      created: "&dCastleFight &8» &fСоздана игра &e#%gameID%"
 
   items:
     main_menu:
@@ -160,8 +163,21 @@ castlefight:
 
   income:
     unitkilledenemy: "&8» &fВы получили &e$5 &8«"
+    main: "&8» &fВы получили &e$%income% &8«"
 
   scoreboards:
+    game_scoreboard:
+      title: "&e&lCASTLEFIGHT"
+      lines:
+        - "&a"
+        - "&8▸ &fВы: &e%player% &8(%activeRole%)"
+        - "&8▸ &fКоманда: &7%team%"
+        - "&b"
+        - "&8▸ &fБаланс: &e%ingameMoney%"
+        - "&8▸ &fДоход: &e%income% / 10s"
+        - "&8▸ &fЛимит башен: &e%towerLimit%"
+        - "&c"
+        - "&eCastleFight Game #%gameID%"
 
 
   menus:

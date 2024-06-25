@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.rstudios.castlefight.modules.GameInfo;
 import ru.rstudios.castlefight.modules.PlayerInfo;
 import ru.rstudios.castlefight.tasks.IncomeTask;
+import ru.rstudios.castlefight.tasks.ScoreboardUpdater;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,8 +69,13 @@ public class createGameCommand implements CommandExecutor, TabCompleter {
                 bossBarUtil.createBossbar(Bukkit.getWorld(String.valueOf(ID)), ID + "_redTeam", ChatColor.translateAlternateColorCodes('&', placeholderUtil.replacePlaceholders(ID, "&f[&c%redHealth%&f/&c%baseHealth%&f]")), BarColor.RED, BarStyle.SOLID,true, 1);
                 bossBarUtil.createBossbar(Bukkit.getWorld(String.valueOf(ID)), ID + "_blueTeam", ChatColor.translateAlternateColorCodes('&', placeholderUtil.replacePlaceholders(ID, "&f[&c%blueHealth%&f/&c%baseHealth%&f]")), BarColor.BLUE, BarStyle.SOLID,true, 1);
 
-                scoreBoardUtil.createScoreboard(sender.getName() + "_" + ID, "§e§lCASTLEFIGHT");
-                scoreBoardUtil.showScoreboard(sender.getName() + "_" + ID, sender.getName());
+                int taskId = Bukkit.getScheduler().runTaskTimer(plugin, new ScoreboardUpdater(sender.getName()), 0, 20).getTaskId();
+                PlayerInfo playerInfo = new PlayerInfo(sender.getName());
+                try {
+                    playerInfo.addTaskId(sender.getName(), taskId);
+                } catch (IOException e) {
+                    errorUtil.error(null, e.getLocalizedMessage());
+                }
             }
         }
         return true;

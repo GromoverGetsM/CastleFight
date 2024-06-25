@@ -84,17 +84,18 @@ public class PlayerRightClickedListener implements Listener {
                                     }
                                 }
 
-                                List<MetadataValue> id0 = leftBottom.getBlock().getMetadata("id");
                                 List<MetadataValue> holoName = leftBottom.getBlock().getMetadata("holoName");
-                                if (!id0.isEmpty() && !holoName.isEmpty()) {
+                                List<MetadataValue> taskIDlist = leftBottom.getBlock().getMetadata("taskID");
+                                if (!holoName.isEmpty() && !taskIDlist.isEmpty()) {
                                     holoUtil.deleteHolo(player.getWorld(), holoName.get(0).asString());
+
+                                    Bukkit.getScheduler().cancelTask(taskIDlist.get(0).asInt());
 
                                     towerUtil.loadStructure(role, tower, possibleLevel, leftBottom).thenAccept(successfulLoad -> {
                                         if (successfulLoad) {
                                             Random random = new Random();
                                             int id = random.nextInt(1, 1000000);
                                             leftBottom.getBlock().setMetadata("owner", new FixedMetadataValue(plugin, player.getName()));
-                                            leftBottom.getBlock().setMetadata("id", new FixedMetadataValue(plugin, id));
                                             leftBottom.getBlock().setMetadata("holoName", new FixedMetadataValue(plugin, player.getName()+"_"+tower+"_"+possibleLevel+"_"+id));
 
                                             holoUtil.createHologram(leftBottom.clone().add(1.5, 2, 1.5), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, YamlConfiguration.loadConfiguration(levelFile).getString("UnitName"));
@@ -105,6 +106,7 @@ public class PlayerRightClickedListener implements Listener {
                                             PlayerInfo playerInfo = new PlayerInfo(player.getName());
                                             try {
                                                 playerInfo.addTaskId(player.getName(), taskID);
+                                                leftBottom.getBlock().setMetadata("taskID", new FixedMetadataValue(plugin, taskID));
                                             } catch (IOException e) {
                                                 errorUtil.error(null, e.getLocalizedMessage());
                                             }

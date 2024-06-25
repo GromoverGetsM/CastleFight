@@ -10,6 +10,8 @@ import ru.rstudios.castlefight.modules.PlayerInfo;
 import java.io.IOException;
 import java.util.List;
 
+import static ru.rstudios.castlefight.CastleFight.scoreBoardUtil;
+
 public class PlayerLeft implements Listener {
     @EventHandler
     public void onPlayerLeft (PlayerQuitEvent event) throws IOException {
@@ -29,6 +31,7 @@ public class PlayerLeft implements Listener {
             }
 
             playerInfo.setTasks(player.getName(), tasks);
+            scoreBoardUtil.deleteScoreboard(player.getName() + "_" + playerInfo.getGameID(), player.getName());
         }
     }
 }
