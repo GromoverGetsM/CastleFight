@@ -92,8 +92,8 @@ public class HoloUtil {
                     if (pdc.get(holoName, PersistentDataType.STRING) != null && pdc.get(holoName, PersistentDataType.STRING).equals(name)) {
                         NamespacedKey lineKey = new NamespacedKey(plugin, "line");
                         if (pdc.get(lineKey, PersistentDataType.INTEGER) != null && pdc.get(lineKey, PersistentDataType.INTEGER) == line) {
-                            createHoloLine(entity.getLocation(), name, text, line);
-                            entity.remove();
+                            entity.setCustomName(text);
+                            entity.setCustomNameVisible(true);
                             break;
                         }
                     }

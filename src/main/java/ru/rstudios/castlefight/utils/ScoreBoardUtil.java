@@ -4,17 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static ru.rstudios.castlefight.CastleFight.*;
 
 public class ScoreBoardUtil {
 
@@ -107,5 +101,4 @@ public class ScoreBoardUtil {
             }
         }
     }
-
 }

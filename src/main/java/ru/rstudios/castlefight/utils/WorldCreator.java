@@ -1,6 +1,7 @@
 package ru.rstudios.castlefight.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static ru.rstudios.castlefight.CastleFight.*;
+import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class WorldCreator {
     public static int createGameWorld (int players) throws IOException {
@@ -26,7 +27,19 @@ public class WorldCreator {
             ID = random.nextInt(1, 1000000);
         } while (games.getString(String.valueOf(ID)) != null);
 
-        Bukkit.createWorld(new org.bukkit.WorldCreator(String.valueOf(ID)));
+        World created = Bukkit.createWorld(new org.bukkit.WorldCreator(String.valueOf(ID)));
+        if (created != null) {
+            created.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+            created.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+            created.setGameRule(GameRule.DO_ENTITY_DROPS, false);
+            created.setGameRule(GameRule.DO_TRADER_SPAWNING, false);
+            created.setGameRule(GameRule.DO_MOB_LOOT, false);
+            created.setGameRule(GameRule.DO_TILE_DROPS, false);
+            created.setGameRule(GameRule.MOB_GRIEFING, false);
+            created.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+
+            created.setTime(12000);
+        }
         Bukkit.unloadWorld(String.valueOf(ID), true);
 
         File maps = new File(plugin.getDataFolder(), "maps");
