@@ -33,7 +33,7 @@ public class UnitSpawner implements Runnable {
 
     @Override
     public void run() {
-        ticksElapsed++;
+        ticksElapsed += 2;
 
         double progress = (double) ticksElapsed / spawnRate;
         updateProgressBar(progress);

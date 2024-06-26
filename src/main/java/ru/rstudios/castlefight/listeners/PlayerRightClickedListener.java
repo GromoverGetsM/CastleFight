@@ -103,7 +103,7 @@ public class PlayerRightClickedListener implements Listener {
                                             HoloUtil.addHoloLine(leftBottom.getWorld(), player.getName()+"_"+tower+"_"+possibleLevel+"_"+id, "§b██████████", 2);
 
                                             HashMap<String, Object> unitData = RoleUtil.getRoleUnitData(role, tower, level);
-                                            int taskID = Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(leftBottom.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), leftBottom), 0, 1).getTaskId();
+                                            int taskID = Bukkit.getScheduler().runTaskTimer(plugin, new UnitSpawner(Integer.parseInt(leftBottom.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), leftBottom), 0, 2).getTaskId();
                                             PlayerInfo playerInfo = new PlayerInfo(player.getName());
                                             try {
                                                 playerInfo.addTaskId(player.getName(), taskID);

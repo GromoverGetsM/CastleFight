@@ -24,8 +24,8 @@ public final class CastleFight extends JavaPlugin {
         getLogger().info("CastleFight загружает необходимые утилиты...");
         plugin = this;
 
-        Bukkit.getScheduler().runTaskTimer(this, new ParticleTask(), 0L, 5L);
-        Bukkit.getScheduler().runTaskTimer(this, new TabPlayersShowTask(), 0L, 20L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new ParticleTask(), 0L, 5L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new TabPlayersShowTask(), 0L, 20L);
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
