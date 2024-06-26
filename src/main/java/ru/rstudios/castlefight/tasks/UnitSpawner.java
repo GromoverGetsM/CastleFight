@@ -1,5 +1,6 @@
 package ru.rstudios.castlefight.tasks;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.metadata.MetadataValue;
 import ru.rstudios.castlefight.modules.GameInfo;
@@ -8,6 +9,8 @@ import ru.rstudios.castlefight.utils.UnitCreator;
 
 import java.util.List;
 import java.util.Locale;
+
+import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class UnitSpawner implements Runnable {
 
@@ -36,12 +39,12 @@ public class UnitSpawner implements Runnable {
         ticksElapsed += 2;
 
         double progress = (double) ticksElapsed / spawnRate;
-        updateProgressBar(progress);
+        Bukkit.getScheduler().runTask(plugin, () -> {updateProgressBar(progress);});
 
         if (ticksElapsed >= spawnRate) {
             ticksElapsed = 0;
 
-            spawnUnitAroundStructure();
+            Bukkit.getScheduler().runTask(plugin, this::spawnUnitAroundStructure);
         }
     }
 
