@@ -4,9 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.metadata.MetadataValue;
 import ru.rstudios.castlefight.modules.GameInfo;
+import ru.rstudios.castlefight.utils.ErrorUtil;
 import ru.rstudios.castlefight.utils.HoloUtil;
 import ru.rstudios.castlefight.utils.UnitCreator;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,8 +45,8 @@ public class UnitSpawner implements Runnable {
 
         if (ticksElapsed >= spawnRate) {
             ticksElapsed = 0;
-
             Bukkit.getScheduler().runTask(plugin, this::spawnUnitAroundStructure);
+
         }
     }
 
@@ -77,6 +79,10 @@ public class UnitSpawner implements Runnable {
             enemyBase = gameInfo.getRedBase();
         }
 
-        UnitCreator.createUnit(unitOwner, role, tower, level, gameInfo.getPlayerTeam(unitOwner), enemyBase, spawnLocation);
+        try {
+            UnitCreator.createUnit(unitOwner, role, tower, level, gameInfo.getPlayerTeam(unitOwner), enemyBase, spawnLocation);
+        } catch (IOException e) {
+            ErrorUtil.error(null, e.getLocalizedMessage());
+        }
     }
 }

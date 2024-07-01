@@ -13,6 +13,7 @@ import ru.rstudios.castlefight.utils.MessagesUtil;
 import ru.rstudios.castlefight.utils.UnitCreator;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,11 @@ public class spawnCommand implements CommandExecutor, TabCompleter {
             if (args.length == 7) {
                 Location spawn = player.getLocation();
                 Location enemyBase = new Location(((Player) sender).getWorld(), Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));
-                UnitCreator.createUnit(player.getName(), args[0], args[1], Integer.parseInt(args[2]), args[3], enemyBase, spawn);
+                try {
+                    UnitCreator.createUnit(player.getName(), args[0], args[1], Integer.parseInt(args[2]), args[3], enemyBase, spawn);
+                } catch (IOException e) {
+                    ErrorUtil.error(null, e.getLocalizedMessage());
+                }
             } else {
                 player.sendMessage(MessagesUtil.messageString("castlefight.commands.spawn.usage"));
             }

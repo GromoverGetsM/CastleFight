@@ -9,7 +9,9 @@ import org.bukkit.entity.*;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import ru.rstudios.castlefight.modules.PlayerInfo;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ public class UnitCreator {
 
 
 
-    public static void createUnit (String unitOwner, String role, String tower, int level, String team, Location target, Location spawn) {
+    public static void createUnit (String unitOwner, String role, String tower, int level, String team, Location target, Location spawn) throws IOException {
         if (RoleUtil.getRoleUnitData(role, tower, level) != null) {
             HashMap<String, Object> unitData = RoleUtil.getRoleUnitData(role, tower, level);
 
@@ -59,7 +61,7 @@ public class UnitCreator {
             final LivingEntity[] currentTarget = {null};
 
 
-            new BukkitRunnable() {
+            int findTargetID = new BukkitRunnable() {
 
                 @Override
                 public void run() {
@@ -78,18 +80,16 @@ public class UnitCreator {
                             currentTarget[0] = unitTarget;
                             if (currentTarget[0] != null) {
                                 ((Mob) entity).setTarget(currentTarget[0]);
-                                System.out.println("Found target " + currentTarget[0] + ", hitting him...");
                             } else {
                                 ((Mob) entity).setTarget(null);
                                 ((Mob) entity).getPathfinder().moveTo(target);
-                                System.out.println("Target null, sending unit to base at " + target);
                             }
                         });
                     });
                 }
-            }.runTaskTimer(plugin, 0, 5);
+            }.runTaskTimer(plugin, 0, 5).getTaskId();
 
-            new BukkitRunnable() {
+            int damageTargetID = new BukkitRunnable() {
                 @Override
                 public void run() {
                     if (entity.isDead()) {
@@ -108,7 +108,11 @@ public class UnitCreator {
                         }
                     });
                 }
-            }.runTaskTimer(plugin, 0, Integer.parseInt(unitData.get("Cooldown").toString()));
+            }.runTaskTimer(plugin, 0, Integer.parseInt(unitData.get("Cooldown").toString())).getTaskId();
+
+            PlayerInfo playerInfo = new PlayerInfo(unitOwner);
+            playerInfo.addTaskId(unitOwner, findTargetID);
+            playerInfo.addTaskId(unitOwner, damageTargetID);
 
         } else {
             ErrorUtil.errorfromconfig(null, "castlefight.errors.unknown-unit-data");
