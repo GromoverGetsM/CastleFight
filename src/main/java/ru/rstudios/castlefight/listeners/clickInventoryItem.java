@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import ru.rstudios.castlefight.modules.ClickActions;
+import ru.rstudios.castlefight.modules.GameInfo;
 import ru.rstudios.castlefight.modules.PlayerInfo;
 import ru.rstudios.castlefight.tasks.ClickActionsHandlerTask;
 import ru.rstudios.castlefight.tasks.UnitSpawner;
@@ -79,7 +80,11 @@ public class clickInventoryItem implements Listener {
                                         }
 
                                         event.setCancelled(true);
-                                        if (!hasObstruction) {
+
+                                        PlayerInfo playerInfo = new PlayerInfo(player.getName());
+                                        GameInfo gameInfo = new GameInfo(playerInfo.getGameID());
+
+                                        if (!hasObstruction && playerInfo.getGameID() != -1 && gameInfo.getPlayerActiveTowers(player.getName()) < gameInfo.getPlayerTowerLimit(player.getName())) {
                                             viewLoc.add(-1, 1, -1);
                                             player.closeInventory();
                                             TowerUtil.loadStructure(role, tower, level, viewLoc).thenAccept(successfulLoad -> {
@@ -100,7 +105,6 @@ public class clickInventoryItem implements Listener {
 
                                                     HashMap<String, Object> unitData = RoleUtil.getRoleUnitData(role, tower, level);
                                                     int taskID = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new UnitSpawner(Integer.parseInt(viewLoc.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), viewLoc), 0, 2).getTaskId();
-                                                    PlayerInfo playerInfo = new PlayerInfo(player.getName());
                                                     try {
                                                         playerInfo.addTaskId(player.getName(), taskID);
                                                         viewLoc.getBlock().setMetadata("taskID", new FixedMetadataValue(plugin, taskID));
@@ -109,9 +113,15 @@ public class clickInventoryItem implements Listener {
                                                     }
                                                 }
                                             });
-                                        } else {
+                                        } else if (hasObstruction ) {
                                             player.closeInventory();
                                             player.sendMessage(MessagesUtil.messageString("castlefight.errors.cannot-place-tower"));
+                                        } else if (playerInfo.getGameID() == -1) {
+                                            player.closeInventory();
+                                            player.sendMessage(MessagesUtil.messageString("castlefight.errors.player-not-in-game"));
+                                        } else if (gameInfo.getPlayerActiveTowers(player.getName()) < gameInfo.getPlayerTowerLimit(player.getName())) {
+                                            player.closeInventory();
+                                            player.sendMessage(MessagesUtil.messageString("castlefight.errors.player-got-tower-limit"));
                                         }
                                     }
                                 } else {

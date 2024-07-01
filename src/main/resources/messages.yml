@@ -91,14 +91,19 @@
 # %ingameMoney% - возвращает баланс игрока в матче
 # %towerLimit% - возвращает лимит зданий игрока в матче
 # %team% - возвращает команду игрока, за которую он играет
+# %activeTowers% - возвращает количество установленных (активных) башен
 #
 # !! Плейсхолдеры сообщений %role%, %tower%, %level%, %error%, %message% не будут заменены вне своих сообщений
 
-messages-version: 1.5
+messages-version: 1.6
 
 castlefight:
   main:
     game-ended: "&dCastleFight &8» &fИгра завершена."
+    select-role-menu: "roles"
+    ban-role-menu: "rolebans"
+    ingame-shop-menu: "ingame_shop"
+    ingame-inventory: "player_ingame_inventory"
 
   errors:
     warning: "&e⚠️ &fВ ходе работы кода произошла непредвиденная ошибка: &e%error%"
@@ -121,6 +126,8 @@ castlefight:
     save-folder-not-found: "&cПапка сохранения не найдена."
     save-file-not-found: "&cФайл сохранения не найден."
     folder-not-found: "&cПапка не найдена."
+    player-not-in-game: "&dCastleFight &8» &cВы сейчас не в игре."
+    player-got-tower-limit: "&dCastleFight &8» &cВы достигли лимита башен."
 
   commands:
     gamemode:
@@ -175,7 +182,7 @@ castlefight:
         - "&b"
         - "&8▸ &fБаланс: &e%ingameMoney%"
         - "&8▸ &fДоход: &e%income% / 10s"
-        - "&8▸ &fЛимит башен: &e%towerLimit%"
+        - "&8▸ &fБашен: &e%activeTowers% / %towerLimit%"
         - "&c"
         - "&eCastleFight Game #%gameID%"
 
@@ -193,6 +200,48 @@ castlefight:
           role: elfs
           tower: spiderslair
           level: 1
+
+    player_ingame_inventory:
+      items:
+        golden_axe:
+          name: "&eВыбор башен"
+          amount: 1
+          slot: 0
+          type: GOLDEN_AXE
+          lore:
+            - "&8"
+            - "&8» &cПКМ &fпо месту на карте открывает."
+            - "&fменю выбора построек"
+            - "&8"
+        diamond_axe:
+          name: "&eУлучшить/Снести башню"
+          amount: 1
+          slot: 1
+          type: DIAMOND_AXE
+          lore:
+            - "&8"
+            - "&8» &cПКМ &fпо башне улучшает её."
+            - "&8» &cShift+ПКМ &fпо башне сносит её."
+            - "&8"
+        armor_stand:
+          name: "&eВизуализация"
+          amount: 1
+          slot: 7
+          type: ARMOR_STAND
+          lore:
+            - "&8"
+            - "&8» &fУправление отображением"
+            - "&fвизуальной части игры"
+            - "&8"
+        slime_ball:
+          name: "&eМагазин предметов"
+          amount: 1
+          slot: 8
+          type: SLIME_BALL
+          lore:
+            - "&8"
+            - "&8» &fОт мечей до молний!"
+            - "&8"
 
     test:
       title: "&8>> &fПример меню"

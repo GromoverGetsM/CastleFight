@@ -26,6 +26,7 @@ public class PlaceholderUtil {
             if (text.contains("%ingameMoney%")) placeholders.add("%ingameMoney%");
             if (text.contains("%towerLimit%")) placeholders.add("%towerLimit%");
             if (text.contains("%team%")) placeholders.add("%team%");
+            if (text.contains("%activeTowers%")) placeholders.add("%activeTowers%");
         }
 
         if (text.contains("%rating%")) placeholders.add("%rating%");
@@ -113,6 +114,10 @@ public class PlaceholderUtil {
                         text = text.replace("%team%", String.valueOf(gameInfo.getPlayerTeam(playerName)));
                     }
                     break;
+                case "%activeTowers%":
+                    if (playerInfo.getGameID() != -1) {
+                        text = text.replace("%activeTowers%", String.valueOf(gameInfo.getPlayerActiveTowers(playerName)));
+                    }
                 default:
                     break;
             }

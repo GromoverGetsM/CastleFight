@@ -29,7 +29,7 @@ public final class CastleFight extends JavaPlugin {
         getLogger().info("Утилиты загружены.");
 
         getLogger().info("CastleFight загружает необходимые файлы...");
-        FileUtil.saveUnusualConfig("messages.yml", FileUtil.loadFile("messages.yml").getString("messages-version") == null || !MessagesUtil.messageString("messages-version").equalsIgnoreCase("1.5"));
+        FileUtil.saveUnusualConfig("messages.yml", FileUtil.loadFile("messages.yml").getString("messages-version") == null || !MessagesUtil.messageString("messages-version").equalsIgnoreCase("1.6"));
         FileUtil.saveUnusualConfig("playersDataTemplate.yml", !new File(plugin.getDataFolder(), "playersDataTemplate.yml").exists());
         FileUtil.createStarterFolder("data");
         FileUtil.createStarterFolder("roles");

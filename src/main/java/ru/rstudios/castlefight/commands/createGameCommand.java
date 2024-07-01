@@ -2,7 +2,6 @@ package ru.rstudios.castlefight.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.command.Command;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.rstudios.castlefight.CastleFight.*;
+import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class createGameCommand implements CommandExecutor, TabCompleter {
 
@@ -63,13 +62,15 @@ public class createGameCommand implements CommandExecutor, TabCompleter {
                     PlayerInfo playerInfo = new PlayerInfo(sender.getName());
                     playerInfo.addTaskId(sender.getName(), TaskID);
                     gameInfo.setPlayerTowerLimit(sender.getName(), gameInfo.getExpectedPerTeamTowers()/gameInfo.getTeamList(gameInfo.getPlayerTeam(sender.getName())).size());
+                    gameInfo.setPlayerActiveTowers(sender.getName(), 0);
                     gameInfo.updateGameInfo(ID);
                 } catch (IOException e) {
                     ErrorUtil.error(null, e.getLocalizedMessage());
                 }
-                ((Player) sender).teleport(new Location(Bukkit.getWorld(String.valueOf(ID)), 0, 64, 0));
-                BossBarUtil.createBossbar(Objects.requireNonNull(Bukkit.getWorld(String.valueOf(ID))), ID + "_redTeam", ChatColor.translateAlternateColorCodes('&', PlaceholderUtil.replacePlaceholders(ID, "&f[&c%redHealth%&f/&c%baseHealth%&f]")), BarColor.RED, BarStyle.SOLID,true, 1);
-                BossBarUtil.createBossbar(Bukkit.getWorld(String.valueOf(ID)), ID + "_blueTeam", ChatColor.translateAlternateColorCodes('&', PlaceholderUtil.replacePlaceholders(ID, "&f[&c%blueHealth%&f/&c%baseHealth%&f]")), BarColor.BLUE, BarStyle.SOLID,true, 1);
+                ((Player) sender).teleport(gameInfo.getWorldSpawn());
+                InventoryUtil.setPlayerInventory((Player) sender);
+                BossBarUtil.createBossbar(Objects.requireNonNull(Bukkit.getWorld(String.valueOf(ID))), ID + "_redTeam", ChatColor.translateAlternateColorCodes('&', PlaceholderUtil.replacePlaceholders(ID, "&f[&c%redHealth%&f/&c%baseHealth%&f] HP")), BarColor.RED, BarStyle.SOLID,true, 1);
+                BossBarUtil.createBossbar(Bukkit.getWorld(String.valueOf(ID)), ID + "_blueTeam", ChatColor.translateAlternateColorCodes('&', PlaceholderUtil.replacePlaceholders(ID, "&f[&c%blueHealth%&f/&c%baseHealth%&f] HP")), BarColor.BLUE, BarStyle.SOLID,true, 1);
 
                 int taskId = Bukkit.getScheduler().runTaskTimer(plugin, new ScoreboardUpdater(sender.getName()), 0, 20).getTaskId();
                 PlayerInfo playerInfo = new PlayerInfo(sender.getName());

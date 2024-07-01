@@ -7,8 +7,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-import static ru.rstudios.castlefight.CastleFight.*;
-
 public class ItemUtil {
     public static void setItem (Material material, Player player, String configName, int amount, int slot) {
         ItemStack item = new ItemStack(material, amount);

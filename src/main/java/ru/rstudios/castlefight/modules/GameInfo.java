@@ -12,6 +12,7 @@ import java.util.*;
 public class GameInfo {
     private org.bukkit.Location redBase;
     private org.bukkit.Location blueBase;
+    private Location spawn;
     private int expectedPlayers;
     private int expectedPerTeamTowers;
     private final Map<String, String> teamsInfo = new HashMap<>();
@@ -19,6 +20,7 @@ public class GameInfo {
     private final Map<String, Integer> balances = new HashMap<>();
     private final Map<String, Integer> incomes = new HashMap<>();
     private final Map<String, Integer> towerLimits = new HashMap<>();
+    private final Map<String, Integer> activeTowers = new HashMap<>();
     private int ID;
     private int baseHealth;
     private int blueHealth;
@@ -67,11 +69,20 @@ public class GameInfo {
             }
         }
 
+        if (gameInfo.contains("playerActiveTowers")) {
+            Set<String> players = gameInfo.getConfigurationSection("playerActiveTowers").getKeys(false);
+            for (String player : players) {
+                int limit = gameInfo.getInt("playerActiveTowers." + player);
+                activeTowers.put(player, limit);
+            }
+        }
+
         this.ID = id;
         this.expectedPlayers = gameInfo.getInt("expectedPlayers");
         this.expectedPerTeamTowers = gameInfo.getInt("expectedPerTeamTowers");
         this.blueBase = new org.bukkit.Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("blueBase.x"), gameInfo.getInt("blueBase.y"), gameInfo.getInt("blueBase.z"));
         this.redBase = new org.bukkit.Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("redBase.x"), gameInfo.getInt("redBase.y"), gameInfo.getInt("redBase.z"));
+        this.spawn = new Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("spawn.x"), gameInfo.getInt("spawn.y"), gameInfo.getInt("spawn.z"));
         this.baseHealth = gameInfo.getInt("baseHealth");
         this.blueHealth = gameInfo.getInt("blueBase.nowHealth");
         this.redHealth = gameInfo.getInt("redBase.nowHealth");
@@ -125,11 +136,20 @@ public class GameInfo {
             }
         }
 
+        if (gameInfo.contains("playerActiveTowers")) {
+            Set<String> players = gameInfo.getConfigurationSection("playerActiveTowers").getKeys(false);
+            for (String player : players) {
+                int limit = gameInfo.getInt("playerActiveTowers." + player);
+                activeTowers.put(player, limit);
+            }
+        }
+
         this.ID = id;
         this.expectedPlayers = gameInfo.getInt("expectedPlayers");
         this.expectedPerTeamTowers = gameInfo.getInt("expectedPerTeamTowers");
         this.blueBase = new org.bukkit.Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("blueBase.x"), gameInfo.getInt("blueBase.y"), gameInfo.getInt("blueBase.z"));
         this.redBase = new org.bukkit.Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("redBase.x"), gameInfo.getInt("redBase.y"), gameInfo.getInt("redBase.z"));
+        this.spawn = new Location(Bukkit.getWorld(String.valueOf(id)), gameInfo.getInt("spawn.x"), gameInfo.getInt("spawn.y"), gameInfo.getInt("spawn.z"));
         this.baseHealth = gameInfo.getInt("baseHealth");
         this.blueHealth = gameInfo.getInt("blueBase.nowHealth");
         this.redHealth = gameInfo.getInt("redBase.nowHealth");
@@ -149,6 +169,10 @@ public class GameInfo {
 
     public int getRedHealth() {
         return this.redHealth;
+    }
+
+    public Location getWorldSpawn() {
+        return spawn;
     }
 
     public void setBaseHealth(int health) throws IOException {
@@ -204,6 +228,20 @@ public class GameInfo {
 
     public String getPlayerActiveRole (String playerName) {
         return activeRoles.get(playerName);
+    }
+
+    public Map<String, Integer> getActiveTowers() {
+        return activeTowers;
+    }
+
+    public int getPlayerActiveTowers (String playerName) {
+        return activeTowers.get(playerName);
+    }
+
+    public void setPlayerActiveTowers (String playerName, int count) throws IOException {
+        FileConfiguration gameInfo = YamlConfiguration.loadConfiguration(new File(Bukkit.getWorldContainer() + File.separator + ID + File.separator + "mapInfo.yml"));
+        gameInfo.set("playerActiveTowers." + playerName, count);
+        gameInfo.save(new File(Bukkit.getWorldContainer() + File.separator + ID + File.separator + "mapInfo.yml"));
     }
 
     public void setPlayerActiveRole (String playerName, String role) throws IOException {

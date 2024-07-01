@@ -79,6 +79,7 @@ public class WorldCreator {
 
             for (Player player : world.getPlayers()) {
                 player.sendMessage(MessagesUtil.messageString("castlefight.main.game-ended"));
+                player.getInventory().clear();
                 player.teleport(new Location(Bukkit.getWorld("world"), 0, 64, 0));
                 PlayerInfo playerInfo = new PlayerInfo(player.getName());
                 List<Integer> tasks = playerInfo.getTasksID();

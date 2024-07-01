@@ -104,6 +104,7 @@ public class RoleUtil {
         spiderslairT1.put("Health", 6);
         spiderslairT1.put("Cooldown", 60);
         spiderslairT1.put("SpawnRate", 500);
+        spiderslairT1.put("Range", 12);
         spiderslairT1.put("Owner", "none");
         spiderslairT1.put("AttackType", "Колющий");
         spiderslairT1.put("DefenseType", "Лёгкий");
@@ -116,6 +117,7 @@ public class RoleUtil {
         spiderslairT2.put("Health", 7);
         spiderslairT2.put("Cooldown", 45);
         spiderslairT2.put("SpawnRate", 500);
+        spiderslairT2.put("Range", 12);
         spiderslairT2.put("Owner", "none");
         spiderslairT2.put("AttackType", "Колющий");
         spiderslairT2.put("DefenseType", "Лёгкий");
@@ -128,6 +130,7 @@ public class RoleUtil {
         spiderslairT3.put("Health", 12);
         spiderslairT3.put("Cooldown", 45);
         spiderslairT3.put("SpawnRate", 400);
+        spiderslairT3.put("Range", 12);
         spiderslairT3.put("Owner", "none");
         spiderslairT3.put("AttackType", "Колющий");
         spiderslairT3.put("DefenseType", "Лёгкий");
@@ -140,6 +143,7 @@ public class RoleUtil {
         spiderslairT4.put("Health", 40);
         spiderslairT4.put("Cooldown", 40);
         spiderslairT4.put("SpawnRate", 1500);
+        spiderslairT4.put("Range", 12);
         spiderslairT4.put("Owner", "none");
         spiderslairT4.put("AttackType", "Колющий");
         spiderslairT4.put("DefenseType", "Лёгкий");

@@ -1,5 +1,6 @@
 package ru.rstudios.castlefight.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -9,11 +10,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static ru.rstudios.castlefight.CastleFight.*;
 import static ru.rstudios.castlefight.CastleFight.plugin;
 
 public class UnitCreator {
@@ -37,10 +36,14 @@ public class UnitCreator {
             NamespacedKey owner = new NamespacedKey(plugin, "Owner");
             NamespacedKey attackType = new NamespacedKey(plugin, "AttackType");
             NamespacedKey protectionType = new NamespacedKey(plugin, "ProtectionType");
+            NamespacedKey range = new NamespacedKey(plugin, "Range");
+            NamespacedKey preferTarget = new NamespacedKey(plugin, "PreferedTarget");
 
             dataContainer.set(owner, PersistentDataType.STRING, unitOwner);
             dataContainer.set(attackType, PersistentDataType.STRING, unitData.get("AttackType").toString());
             dataContainer.set(protectionType, PersistentDataType.STRING, unitData.get("DefenseType").toString());
+            dataContainer.set(range, PersistentDataType.INTEGER, Integer.parseInt(unitData.get("Range").toString()));
+            dataContainer.set(preferTarget, PersistentDataType.STRING, "Ближайший");
 
             LivingEntity livingEntity = (LivingEntity) entity;
             Objects.requireNonNull(livingEntity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(0);
@@ -65,21 +68,22 @@ public class UnitCreator {
                         return;
                     }
 
-                    String entityColorCode = getColorCode(entity.getCustomName());
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                        LivingEntity unitTarget = CountDamageUtil.getTarget(entity);
 
-                    currentTarget[0] = entity.getNearbyEntities(12, 12, 12).stream()
-                            .filter(e -> e instanceof LivingEntity && !(e instanceof Player) && !(e instanceof ArmorStand) && e != entity)
-                            .map(e -> (LivingEntity) e)
-                            .filter(e -> !hasSameColorCode(e, entityColorCode))
-                            .min(Comparator.comparingDouble(e -> e.getLocation().distance(entity.getLocation())))
-                            .orElse(null);
-
-                    if (currentTarget[0] != null && !(entity instanceof Player)) {
-                        ((Mob) entity).setTarget(currentTarget[0]);
-                    } else if (currentTarget[0] == null) {
-                        ((Mob) entity).setTarget(null);
-                        ((Mob) entity).getPathfinder().moveTo(target);
-                    }
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (entity.isDead()) {
+                                return;
+                            }
+                            currentTarget[0] = unitTarget;
+                            if (currentTarget[0] != null && !(entity instanceof Player)) {
+                                ((Mob) entity).setTarget(currentTarget[0]);
+                            } else if (currentTarget[0] == null) {
+                                ((Mob) entity).setTarget(null);
+                                ((Mob) entity).getPathfinder().moveTo(target);
+                            }
+                        });
+                    });
                 }
             }.runTaskTimer(plugin, 0, 5);
 
@@ -91,25 +95,21 @@ public class UnitCreator {
                         return;
                     }
 
-                    if (currentTarget[0] != null && !currentTarget[0].isDead() && currentTarget[0].getLocation().distance(entity.getLocation()) <= 2) {
-                        currentTarget[0].damage(CountDamageUtil.getUnitDamage(entity, currentTarget[0], Double.parseDouble(unitData.get("Damage").toString())), entity);
-                    }
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                        if (currentTarget[0] != null && !currentTarget[0].isDead() && currentTarget[0].getLocation().distance(entity.getLocation()) <= 2) {
+                            double damage = CountDamageUtil.getUnitDamage(entity, currentTarget[0], Double.parseDouble(unitData.get("Damage").toString()));
+                            Bukkit.getScheduler().runTask(plugin, () -> {
+                                if (!currentTarget[0].isDead()) {
+                                    currentTarget[0].damage(damage, entity);
+                                }
+                            });
+                        }
+                    });
                 }
             }.runTaskTimer(plugin, 0, Integer.parseInt(unitData.get("Cooldown").toString()));
+
         } else {
             ErrorUtil.errorfromconfig(null, "castlefight.errors.unknown-unit-data");
         }
-    }
-
-    private static String getColorCode(String name) {
-        if (name == null || name.isEmpty()) {
-            return "";
-        }
-        return name.substring(0, 2);
-    }
-
-    private static boolean hasSameColorCode(LivingEntity entity, String colorCode) {
-        String entityName = entity.getCustomName();
-        return entityName != null && entityName.startsWith(colorCode);
     }
 }

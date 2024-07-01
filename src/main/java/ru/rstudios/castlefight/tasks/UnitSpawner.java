@@ -39,7 +39,7 @@ public class UnitSpawner implements Runnable {
         ticksElapsed += 2;
 
         double progress = (double) ticksElapsed / spawnRate;
-        Bukkit.getScheduler().runTask(plugin, () -> {updateProgressBar(progress);});
+        Bukkit.getScheduler().runTask(plugin, () -> updateProgressBar(progress));
 
         if (ticksElapsed >= spawnRate) {
             ticksElapsed = 0;
