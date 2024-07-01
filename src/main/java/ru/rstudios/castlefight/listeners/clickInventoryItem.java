@@ -83,16 +83,25 @@ public class clickInventoryItem implements Listener {
 
                                         PlayerInfo playerInfo = new PlayerInfo(player.getName());
                                         GameInfo gameInfo = new GameInfo(playerInfo.getGameID());
+                                        File mainFolder = new File(plugin.getDataFolder(), "roles");
+                                        File roleFolder = new File(mainFolder, role);
+                                        File towerFolder = new File(roleFolder, tower);
+                                        File levelFile = new File(towerFolder, level + ".yml");
 
-                                        if (!hasObstruction && playerInfo.getGameID() != -1 && gameInfo.getPlayerActiveTowers(player.getName()) < gameInfo.getPlayerTowerLimit(player.getName())) {
+                                        int cost = YamlConfiguration.loadConfiguration(levelFile).getInt("Cost");
+
+                                        if (!hasObstruction && playerInfo.getGameID() != -1 && gameInfo.getPlayerActiveTowers(player.getName()) < gameInfo.getPlayerTowerLimit(player.getName()) && gameInfo.getPlayerBalance(player.getName()) >= cost) {
                                             viewLoc.add(-1, 1, -1);
                                             player.closeInventory();
                                             TowerUtil.loadStructure(role, tower, level, viewLoc).thenAccept(successfulLoad -> {
                                                 if (successfulLoad) {
-                                                    File mainFolder = new File(plugin.getDataFolder(), "roles");
-                                                    File roleFolder = new File(mainFolder, role);
-                                                    File towerFolder = new File(roleFolder, tower);
-                                                    File levelFile = new File(towerFolder, level + ".yml");
+
+                                                    try {
+                                                        gameInfo.setPlayerActiveTowers(player.getName(), gameInfo.getPlayerActiveTowers(player.getName()) + 1);
+                                                    } catch (IOException e) {
+                                                        ErrorUtil.error(null, e.getLocalizedMessage());
+                                                    }
+                                                    Bukkit.getScheduler().runTaskAsynchronously(plugin, new ClickActionsHandlerTask(player.getName(), ClickActions.TAKE_GAME_MONEY, String.valueOf(YamlConfiguration.loadConfiguration(levelFile).getInt("Cost"))));
 
                                                     Random random = new Random();
                                                     int id = random.nextInt(1, 1000000);
@@ -119,9 +128,11 @@ public class clickInventoryItem implements Listener {
                                         } else if (playerInfo.getGameID() == -1) {
                                             player.closeInventory();
                                             player.sendMessage(MessagesUtil.messageString("castlefight.errors.player-not-in-game"));
-                                        } else if (gameInfo.getPlayerActiveTowers(player.getName()) < gameInfo.getPlayerTowerLimit(player.getName())) {
+                                        } else if (gameInfo.getPlayerActiveTowers(player.getName()) >= gameInfo.getPlayerTowerLimit(player.getName())) {
                                             player.closeInventory();
                                             player.sendMessage(MessagesUtil.messageString("castlefight.errors.player-got-tower-limit"));
+                                        } else if (gameInfo.getPlayerBalance(player.getName()) < cost) {
+                                            player.sendMessage(MessagesUtil.messageString("castlefight.errors.not-enough-money"));
                                         }
                                     }
                                 } else {

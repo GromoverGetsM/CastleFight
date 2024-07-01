@@ -68,7 +68,7 @@ public class UnitCreator {
                         return;
                     }
 
-                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                    Bukkit.getScheduler().runTask(plugin, () -> {
                         LivingEntity unitTarget = CountDamageUtil.getTarget(entity);
 
                         Bukkit.getScheduler().runTask(plugin, () -> {
@@ -76,11 +76,13 @@ public class UnitCreator {
                                 return;
                             }
                             currentTarget[0] = unitTarget;
-                            if (currentTarget[0] != null && !(entity instanceof Player)) {
+                            if (currentTarget[0] != null) {
                                 ((Mob) entity).setTarget(currentTarget[0]);
-                            } else if (currentTarget[0] == null) {
+                                System.out.println("Found target " + currentTarget[0] + ", hitting him...");
+                            } else {
                                 ((Mob) entity).setTarget(null);
                                 ((Mob) entity).getPathfinder().moveTo(target);
+                                System.out.println("Target null, sending unit to base at " + target);
                             }
                         });
                     });

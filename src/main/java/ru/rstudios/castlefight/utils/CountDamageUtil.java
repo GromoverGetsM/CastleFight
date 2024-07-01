@@ -59,7 +59,7 @@ public class CountDamageUtil {
 
         int eRange = pdc.get(range, PersistentDataType.INTEGER);
         String preferedTarget = pdc.get(preferTarget, PersistentDataType.STRING);
-        LivingEntity target = null;
+        LivingEntity target;
 
         switch (preferedTarget) {
             case "Ближайший":
@@ -93,6 +93,9 @@ public class CountDamageUtil {
                         .filter(e -> !hasSameColorCode(e, getColorCode(entity.getCustomName())))
                         .max(Comparator.comparingDouble(Damageable::getHealth))
                         .orElse(null);
+                break;
+            default:
+                target = null;
                 break;
         }
 

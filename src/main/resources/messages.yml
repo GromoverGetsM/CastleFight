@@ -128,6 +128,8 @@ castlefight:
     folder-not-found: "&cПапка не найдена."
     player-not-in-game: "&dCastleFight &8» &cВы сейчас не в игре."
     player-got-tower-limit: "&dCastleFight &8» &cВы достигли лимита башен."
+    not-player-tower: "&dCastleFight &8» &cЭто не ваше здание."
+    not-enough-money: "&dCastleFight &8» &cНедостаточно средств."
 
   commands:
     gamemode:
@@ -202,6 +204,8 @@ castlefight:
           level: 1
 
     player_ingame_inventory:
+      title: ""
+      size: 9
       items:
         golden_axe:
           name: "&eВыбор башен"

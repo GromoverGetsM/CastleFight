@@ -76,6 +76,7 @@ public class RoleUtil {
                     data.put("Damage", dataFile.getInt("Damage"));
                     data.put("Health", dataFile.getInt("Health"));
                     data.put("Cost", dataFile.getInt("Cost"));
+                    data.put("Range", dataFile.getInt("Range"));
 
                     return data;
                 } else {
@@ -108,7 +109,7 @@ public class RoleUtil {
         spiderslairT1.put("Owner", "none");
         spiderslairT1.put("AttackType", "Колющий");
         spiderslairT1.put("DefenseType", "Лёгкий");
-        spiderslairT1.put("Cost", 0);
+        spiderslairT1.put("Cost", 200);
         spiderslairT1.put("Income", 5);
 
         spiderslairT2.put("UnitName", "Тарантул");

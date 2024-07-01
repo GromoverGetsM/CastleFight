@@ -74,6 +74,8 @@ public class WorldCreator {
     public static void deleteGameWorld (int ID) throws IOException {
         World world = Bukkit.getWorld(String.valueOf(ID));
         if (world != null) {
+            File worldFile = new File(Bukkit.getServer().getWorldContainer() + File.separator + ID + File.separator);
+
             BossBarUtil.deleteBossbar(ID + "_redTeam");
             BossBarUtil.deleteBossbar(ID + "_blueTeam");
 
@@ -100,6 +102,7 @@ public class WorldCreator {
             FileConfiguration games = FileUtil.loadFile("activeGames.yml");
             games.set(String.valueOf(ID), null);
             games.save(new File(plugin.getDataFolder(), "activeGames.yml"));
+            FileUtil.deleteWorld(worldFile);
         }
     }
 }

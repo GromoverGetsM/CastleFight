@@ -33,7 +33,7 @@ import static ru.rstudios.castlefight.CastleFight.plugin;
 public class PlayerRightClickedListener implements Listener {
 
     @EventHandler
-    public void onPlayerRightClicked (PlayerInteractEvent event) {
+    public void onPlayerRightClicked (PlayerInteractEvent event) throws IOException {
         if (event.getAction().isRightClick()) {
             Player player = event.getPlayer();
             if (player.getInventory().getItemInMainHand().getType().getKey() == Material.GOLDEN_AXE.getKey()) {
@@ -90,11 +90,17 @@ public class PlayerRightClickedListener implements Listener {
 
                                     List<MetadataValue> holoName = leftBottom.getBlock().getMetadata("holoName");
                                     List<MetadataValue> taskIDlist = leftBottom.getBlock().getMetadata("taskID");
-                                    if (!holoName.isEmpty() && !taskIDlist.isEmpty()) {
+                                    List<MetadataValue> owner = leftBottom.getBlock().getMetadata("owner");
+
+                                    PlayerInfo playerInfo = new PlayerInfo(player.getName());
+                                    GameInfo gameInfo = new GameInfo(playerInfo.getGameID());
+                                    int cost = YamlConfiguration.loadConfiguration(levelFile).getInt("Cost");
+
+                                    if (!holoName.isEmpty() && !taskIDlist.isEmpty() && !owner.isEmpty() && owner.get(0).asString().equalsIgnoreCase(player.getName()) && gameInfo.getPlayerBalance(player.getName()) >= cost) {
                                         HoloUtil.deleteHolo(player.getWorld(), holoName.get(0).asString());
 
                                         Bukkit.getScheduler().cancelTask(taskIDlist.get(0).asInt());
-
+                                        Bukkit.getScheduler().runTaskAsynchronously(plugin, new ClickActionsHandlerTask(player.getName(), ClickActions.TAKE_GAME_MONEY, String.valueOf(cost)));
                                         TowerUtil.loadStructure(role, tower, possibleLevel, leftBottom).thenAccept(successfulLoad -> {
                                             if (successfulLoad) {
                                                 Random random = new Random();
@@ -107,7 +113,6 @@ public class PlayerRightClickedListener implements Listener {
 
                                                 HashMap<String, Object> unitData = RoleUtil.getRoleUnitData(role, tower, level);
                                                 int taskID = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new UnitSpawner(Integer.parseInt(leftBottom.getWorld().getName()), player.getName(), role, tower, level, Integer.parseInt(unitData.get("SpawnRate").toString()), leftBottom), 0, 2).getTaskId();
-                                                PlayerInfo playerInfo = new PlayerInfo(player.getName());
                                                 try {
                                                     playerInfo.addTaskId(player.getName(), taskID);
                                                     leftBottom.getBlock().setMetadata("taskID", new FixedMetadataValue(plugin, taskID));
@@ -116,6 +121,10 @@ public class PlayerRightClickedListener implements Listener {
                                                 }
                                             }
                                         });
+                                    } else if (!owner.get(0).asString().equalsIgnoreCase(player.getName())) {
+                                        player.sendMessage(MessagesUtil.messageString("castlefight.errors.not-player-tower"));
+                                    } else if (gameInfo.getPlayerBalance(player.getName()) < cost) {
+                                        player.sendMessage(MessagesUtil.messageString("castlefight.errors.not-enough-money"));
                                     }
                                 } else {
                                     ErrorUtil.errorfromconfig(player, "castlefight.errors.tower-not-found");
@@ -143,7 +152,8 @@ public class PlayerRightClickedListener implements Listener {
 
                         Location LBLoc = getLocation(parts, player);
 
-                        if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_AXE) {
+                        List<MetadataValue> owner = LBLoc.getBlock().getMetadata("owner");
+                        if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_AXE && !owner.isEmpty() && owner.get(0).asString().equalsIgnoreCase(player.getName())) {
                             File mainFolder = new File(plugin.getDataFolder(), "roles");
                             File roleFolder = new File(mainFolder, role);
                             File towerFolder = new File(roleFolder, tower);
@@ -172,12 +182,17 @@ public class PlayerRightClickedListener implements Listener {
                                         HoloUtil.deleteHolo(player.getWorld(), holoName.get(0).asString());
 
                                         Bukkit.getScheduler().cancelTask(taskIDlist.get(0).asInt());
+                                        PlayerInfo playerInfo = new PlayerInfo(player.getName());
+                                        GameInfo gameInfo = new GameInfo(playerInfo.getGameID());
 
+                                        gameInfo.setPlayerActiveTowers(player.getName(), gameInfo.getPlayerActiveTowers(player.getName()) - 1);
                                     }
 
                                     Bukkit.getScheduler().runTaskAsynchronously(plugin, new ClickActionsHandlerTask(player.getName(), ClickActions.ADD_GAME_MONEY, String.valueOf(YamlConfiguration.loadConfiguration(levelFile).getInt("Cost"))));
                                 }
                             }
+                        } else if (!owner.get(0).asString().equalsIgnoreCase(player.getName())) {
+                            player.sendMessage(MessagesUtil.messageString("castlefight.errors.not-player-tower"));
                         }
                     }
                 }
